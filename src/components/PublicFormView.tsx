@@ -1,9 +1,12 @@
 import { createSignal, For, Show } from 'solid-js'
 import { createForm } from '@tanstack/solid-form'
-import type { DynamicFormSchema } from '../types/schema'
-import { ErrorModal, ConfirmationModal } from './ErrorModal'
+import type { DynamicFormSchema } from '~/types/form'
+import { ErrorModal } from './ErrorModal'
+import { ConfirmationModal } from './ConfirmationModal'
 import { QRScannerModal } from './QRScannerModal'
 import styles from './Form.module.css'
+
+
 
 interface PublicFormViewProps {
   form: DynamicFormSchema
@@ -62,7 +65,7 @@ export function PublicFormView(props: PublicFormViewProps) {
         }
 
         if (!response.ok) {
-          const error = await response.json()
+          const error: Error = await response.json()
           throw new Error(error.message || 'Failed to submit form')
         }
 
@@ -124,7 +127,7 @@ export function PublicFormView(props: PublicFormViewProps) {
       })
 
       if (!response.ok) {
-        const error = await response.json()
+        const error: Error = await response.json()
         throw new Error(error.message || 'Failed to overwrite submission')
       }
 
@@ -147,9 +150,10 @@ export function PublicFormView(props: PublicFormViewProps) {
   }
 
   const handleQrScan = (result: string) => {
-    if (qrScannerField()) {
-      form.setFieldValue(qrScannerField()!, result)
-    }
+    const fieldKey = qrScannerField();
+
+    //@ts-expect-error - generic fields are not directly supported
+    fieldKey && form.setFieldValue(fieldKey!, result)
   }
 
   return (
@@ -192,8 +196,8 @@ export function PublicFormView(props: PublicFormViewProps) {
                 placeholder="Enter your user ID"
                 value={form.state.values.userId ?? ''}
                 onInput={(e) => form.setFieldValue('userId', e.target.value)}
-                aria-invalid={form.state.errors.userId?.length > 0}
-                aria-describedby={form.state.errors.userId?.length ? 'userId-error' : undefined}
+                aria-invalid={(form.state.fieldMeta.userId?.errors?.length || 0) > 0}
+                aria-describedby={form.state.fieldMeta.userId?.errors?.length ? 'userId-error' : undefined}
                 required
                 class={styles.input}
               />
@@ -202,6 +206,7 @@ export function PublicFormView(props: PublicFormViewProps) {
             <For each={props.form.fieldCollection}>
               {field => (
                 <form.Field
+                  //@ts-expect-error - generic fields are not directly supported
                   name={field.machineSlug}
                   validators={{
                     onBlur: ({ value }) => validateField(field, value),
@@ -311,8 +316,8 @@ export function PublicFormView(props: PublicFormViewProps) {
                             <input
                               id={field.machineSlug}
                               type="checkbox"
-                              checked={fieldApi().state.value === true}
-                              onChange={(e) => fieldApi().handleChange(e.target.checked)}
+                              checked={fieldApi().state.value ? true : false}
+                              onChange={(e) => fieldApi().handleChange(e.target.checked ? 'true' : 'false')}
                               class={styles.checkbox}
                             />
                             <label for={field.machineSlug} class={styles.label}>
@@ -337,8 +342,8 @@ export function PublicFormView(props: PublicFormViewProps) {
                                       type="radio"
                                       name={field.machineSlug}
                                       value={index() + 1}
-                                      checked={fieldApi().state.value == index() + 1}
-                                      onChange={() => fieldApi().handleChange(index() + 1)}
+                                      checked={parseInt(fieldApi().state.value) == index() + 1}
+                                      onChange={() => fieldApi().handleChange((index() + 1).toString())}
                                       class={styles.radio}
                                     />
                                     {option}

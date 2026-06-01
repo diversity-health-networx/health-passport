@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/solid-router'
 import { createSignal, For, Show } from 'solid-js'
-import type { QuestionType } from '../types/schema'
+import type { QuestionType } from '~/types/form'
 
 export const Route = createFileRoute('/admin/create')({
   component: FormSchemaBuilderWorkspace,

@@ -165,7 +165,7 @@ export function QRScannerModal(props: QRScannerModalProps) {
           tabindex={-1}
           style={{ 
             animation: "modalSlideIn 250ms cubic-bezier(0.34, 1.56, 0.64, 1)",
-            transformOrigin: "center"
+            'transform-origin': "center"
           }}
         >
           <div class="flex items-center gap-3 mb-1">

@@ -1,8 +1,9 @@
 import { createSignal, For, Show } from 'solid-js'
 import { createQuery, useQueryClient } from '@tanstack/solid-query'
 import { extractTimestampFromUUIDv7 } from '../utils/uuid'
-import type { DynamicFormSchema } from '../types/schema'
+import type { DynamicFormSchema } from '~/types/form'
 import styles from './Admin.module.css'
+import { SubmissionRow } from '~/types/tables'
 
 interface AdminAnalyticsDashboardProps {
   form: DynamicFormSchema & { questions_json?: string }
@@ -10,7 +11,7 @@ interface AdminAnalyticsDashboardProps {
 
 export function AdminAnalyticsDashboard(props: AdminAnalyticsDashboardProps) {
   const [selectedSubmission, setSelectedSubmission] = createSignal<any>(null)
-  const [allowOverwriteToggle, setAllowOverwriteToggle] = createSignal(props.form.allow_overwrite === 1)
+  const [allowOverwriteToggle, setAllowOverwriteToggle] = createSignal(props.form.allowOverwrite ? true : false)
   const [expiryDate, setExpiryDate] = createSignal(
     props.form.submissionsExpiry 
       ? new Date(props.form.submissionsExpiry * 1000).toISOString().slice(0, 16) 
@@ -23,7 +24,7 @@ export function AdminAnalyticsDashboard(props: AdminAnalyticsDashboardProps) {
     queryFn: async () => {
       const response = await fetch(`/api/admin/form-submissions?form_id=${props.form.id}`)
       if (!response.ok) throw new Error('Failed to fetch submissions')
-      return response.json()
+      return response.json() as Promise<SubmissionRow[]>
     },
   }))
 

@@ -15,7 +15,7 @@ function UserSubmissionCrossLookup() {
     queryKey: ['user-submissions', submittedQuery()],
     queryFn: async (): Promise<any[]> => {
       if (!submittedQuery()) return []
-      const response = await fetch(`/api/admin/lookup-by-user?user_id=${encodeURIComponent(submittedQuery())}`)
+      const response = await fetch(`/api/admin/submissions-by-user?user_id=${encodeURIComponent(submittedQuery())}`)
       if (!response.ok) return []
       return response.json()
     },
