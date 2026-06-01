@@ -38,7 +38,7 @@ All server functions to migrate (using globalThis.DB for D1):
 | /api/admin/remove-form | DELETE | deleteForm | ❌ Replace existing |
 | /api/admin/form-submissions | GET | getFormSubmissions | ❌ Replace existing |
 | /api/submissions | POST | createSubmission | ❌ Replace existing |
-| /api/admin/lookup-by-user | GET | getSubmissionsByUser | ❌ Replace existing |
+| /api/admin/submissions-by-user | GET | getSubmissionsByUser | ❌ Replace existing |
 | /api/admin/email-csv-report | POST | emailCsvReport | ❌ Replace existing |
 | /api/admin/toggle-overwrite | PATCH | toggleOverwrite | ❌ Replace existing |
 | /api/admin/toggle-expiry | PATCH | toggleExpiry | ❌ Replace existing |
