@@ -20,8 +20,8 @@ function FormGatewayRoute() {
     () => ({ id: targetFormId(), name: targetFormName() }),
     async query => {
       const searchUrl = query.id
-        ? `/api/form-definition?id=${encodeURIComponent(query.id)}`
-        : `/api/form-definition?name=${encodeURIComponent(query.name || '')}`
+        ? `/api/form-settings?id=${encodeURIComponent(query.id)}`
+        : `/api/form-settings?name=${encodeURIComponent(query.name || '')}`
       try {
         const response = await fetch(searchUrl)
         if (!response.ok) throw new Error('Form not found')

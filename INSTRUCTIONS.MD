@@ -32,7 +32,7 @@ All server functions to migrate (using globalThis.DB for D1):
 
 | Endpoint | Method | Handler | Status |
 |----------|--------|---------|--------|
-| /api/form-definition | GET | getFormDefinition | ❌ Replace existing |
+| /api/form-settings | GET | getFormDefinition | ❌ Replace existing |
 | /api/admin/get-all-forms | GET | getAllForms | ❌ Replace existing |
 | /api/admin/create-form | POST | createForm | ❌ Replace existing |
 | /api/admin/remove-form | DELETE | deleteForm | ❌ Replace existing |
