@@ -4,7 +4,11 @@
   "compatibility_date": "2025-09-24",
   "compatibility_flags": ["nodejs_compat"],
   "main": "@tanstack/solid-start/server-entry",
-  "vars": {
-    "MY_VAR": "Hello from Cloudflare",
-  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "health_passport_db",
+      "database_id": "b4cb2dff-a2b7-40a9-b684-c6868af98f90"
+    }
+  ],
 }
