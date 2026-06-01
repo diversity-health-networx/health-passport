@@ -1,27 +1,52 @@
-import { createFileRoute } from '@tanstack/solid-router'
-import { createServerFn } from '@tanstack/solid-start'
-import { env } from 'cloudflare:workers'
+import { createFileRoute, Link } from '@tanstack/solid-router'
 
-export const Route = createFileRoute('/')({
-  loader: () => getData(),
-  component: Home,
-})
+export const Route = createFileRoute('/')({ component: App })
 
-const getData = createServerFn().handler(() => {
-  return {
-    message: `Running in ${navigator.userAgent}`,
-    myVar: env.MY_VAR,
-  }
-})
-
-function Home() {
-  const data = Route.useLoaderData()
-
+function App() {
   return (
-    <div class="p-2">
-      <h3>Welcome Home!!!</h3>
-      <p>{data().message}</p>
-      <p>{data().myVar}</p>
-    </div>
+    <main class="page-wrap px-4 pb-8 pt-14">
+      <section class="island-shell rise-in relative overflow-hidden rounded-[2rem] px-6 py-10 sm:px-10 sm:py-14">
+        <div class="pointer-events-none absolute -left-20 -top-24 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(79,184,178,0.32),transparent_66%)]" />
+        <div class="pointer-events-none absolute -bottom-20 -right-20 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(47,106,74,0.18),transparent_66%)]" />
+        <p class="island-kicker mb-3">Health Passport</p>
+        <h1 class="display-title mb-5 max-w-3xl text-4xl leading-[1.02] font-bold tracking-tight text-[var(--sea-ink)] sm:text-6xl">
+          Form Orchestration Platform
+        </h1>
+        <p class="mb-8 max-w-2xl text-base text-[var(--sea-ink-soft)] sm:text-lg">
+          Secure, distributed form handling with admin analytics.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <Link
+            to="/admin/forms"
+            class="rounded-full border border-[rgba(50,143,151,0.3)] bg-[rgba(79,184,178,0.14)] px-5 py-2.5 text-sm font-semibold text-[var(--lagoon-deep)] no-underline transition hover:-translate-y-0.5 hover:bg-[rgba(79,184,178,0.24)]"
+          >
+            Admin Dashboard
+          </Link>
+          <Link
+            to="/admin/create"
+            class="rounded-full border border-[rgba(23,58,64,0.2)] bg-white/50 px-5 py-2.5 text-sm font-semibold text-[var(--sea-ink)] no-underline transition hover:-translate-y-0.5 hover:border-[rgba(23,58,64,0.35)]"
+          >
+            Create Form
+          </Link>
+        </div>
+      </section>
+
+      <section class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          ['D1 Database', 'Cloudflare edge-replicated SQLite for distributed data storage.'],
+          ['Secure Auth', 'Magic link authentication for administrators.'],
+          ['Postmark', 'Reliable email delivery for notifications.'],
+          ['UUIDv7', 'Chronologically sortable temporal identifiers.'],
+        ].map(([title, desc], index) => (
+          <article
+            class="island-shell feature-card rise-in rounded-2xl p-5"
+            style={{ 'animation-delay': `${index * 90 + 80}ms` }}
+          >
+            <h2 class="mb-2 text-base font-semibold text-[var(--sea-ink)]">{title}</h2>
+            <p class="m-0 text-sm text-[var(--sea-ink-soft)]">{desc}</p>
+          </article>
+        ))}
+      </section>
+    </main>
   )
 }
