@@ -12,11 +12,17 @@
     "postinstall": "npm run cf-typegen"
   },
   "dependencies": {
+    "@t3-oss/env-core": "^0.13.11",
+    "@tanstack/solid-form": "^1.33.0",
+    "@tanstack/solid-query": "^5.100.14",
     "@tanstack/solid-router": "^1.170.10",
     "@tanstack/solid-router-devtools": "^1.167.0",
     "@tanstack/solid-start": "^1.168.18",
+    "html5-qrcode": "^2.3.8",
+    "jose": "^6.2.3",
     "solid-js": "^1.9.10",
-    "uuidv7-isomorphic": "^1.0.0"
+    "uuidv7-isomorphic": "^1.0.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.29.0",
