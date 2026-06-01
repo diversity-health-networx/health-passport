@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as UsersRouteImport } from './routes/users'
 import { Route as RedirectRouteImport } from './routes/redirect'
 import { Route as PostsRouteImport } from './routes/posts'
+import { Route as FormRouteImport } from './routes/form'
 import { Route as DeferredRouteImport } from './routes/deferred'
 import { Route as CustomScriptDotjsRouteImport } from './routes/customScript[.]js'
 import { Route as PathlessLayoutRouteImport } from './routes/_pathlessLayout'
@@ -21,9 +22,22 @@ import { Route as PostsIndexRouteImport } from './routes/posts.index'
 import { Route as UsersUserIdRouteImport } from './routes/users.$userId'
 import { Route as PostsPostIdRouteImport } from './routes/posts.$postId'
 import { Route as ApiUsersRouteImport } from './routes/api/users'
+import { Route as ApiSubmissionsRouteImport } from './routes/api/submissions'
+import { Route as ApiGlobalSettingsRouteImport } from './routes/api/global-settings'
+import { Route as ApiFormSubmissionRouteImport } from './routes/api/form-submission'
+import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AdminLookupRouteImport } from './routes/admin.lookup'
+import { Route as AdminLoginRouteImport } from './routes/admin.login'
+import { Route as AdminFormsRouteImport } from './routes/admin.forms'
+import { Route as AdminCreateRouteImport } from './routes/admin.create'
 import { Route as PathlessLayoutNestedLayoutRouteImport } from './routes/_pathlessLayout/_nested-layout'
 import { Route as PostsPostIdDeepRouteImport } from './routes/posts_.$postId.deep'
 import { Route as ApiUsersUserIdRouteImport } from './routes/api/users.$userId'
+import { Route as ApiAdminToggleOverwriteRouteImport } from './routes/api/admin/toggle-overwrite'
+import { Route as ApiAdminSubmissionsByUserRouteImport } from './routes/api/admin/submissions-by-user'
+import { Route as ApiAdminRemoveFormRouteImport } from './routes/api/admin/remove-form'
+import { Route as ApiAdminEmailCsvReportRouteImport } from './routes/api/admin/email-csv-report'
+import { Route as ApiAdminCreateFormRouteImport } from './routes/api/admin/create-form'
 import { Route as PathlessLayoutNestedLayoutRouteBRouteImport } from './routes/_pathlessLayout/_nested-layout/route-b'
 import { Route as PathlessLayoutNestedLayoutRouteARouteImport } from './routes/_pathlessLayout/_nested-layout/route-a'
 
@@ -40,6 +54,11 @@ const RedirectRoute = RedirectRouteImport.update({
 const PostsRoute = PostsRouteImport.update({
   id: '/posts',
   path: '/posts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FormRoute = FormRouteImport.update({
+  id: '/form',
+  path: '/form',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DeferredRoute = DeferredRouteImport.update({
@@ -86,6 +105,46 @@ const ApiUsersRoute = ApiUsersRouteImport.update({
   path: '/api/users',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiSubmissionsRoute = ApiSubmissionsRouteImport.update({
+  id: '/api/submissions',
+  path: '/api/submissions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGlobalSettingsRoute = ApiGlobalSettingsRouteImport.update({
+  id: '/api/global-settings',
+  path: '/api/global-settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiFormSubmissionRoute = ApiFormSubmissionRouteImport.update({
+  id: '/api/form-submission',
+  path: '/api/form-submission',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/admin/settings',
+  path: '/admin/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLookupRoute = AdminLookupRouteImport.update({
+  id: '/admin/lookup',
+  path: '/admin/lookup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin/login',
+  path: '/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminFormsRoute = AdminFormsRouteImport.update({
+  id: '/admin/forms',
+  path: '/admin/forms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminCreateRoute = AdminCreateRouteImport.update({
+  id: '/admin/create',
+  path: '/admin/create',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PathlessLayoutNestedLayoutRoute =
   PathlessLayoutNestedLayoutRouteImport.update({
     id: '/_nested-layout',
@@ -100,6 +159,32 @@ const ApiUsersUserIdRoute = ApiUsersUserIdRouteImport.update({
   id: '/$userId',
   path: '/$userId',
   getParentRoute: () => ApiUsersRoute,
+} as any)
+const ApiAdminToggleOverwriteRoute = ApiAdminToggleOverwriteRouteImport.update({
+  id: '/api/admin/toggle-overwrite',
+  path: '/api/admin/toggle-overwrite',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminSubmissionsByUserRoute =
+  ApiAdminSubmissionsByUserRouteImport.update({
+    id: '/api/admin/submissions-by-user',
+    path: '/api/admin/submissions-by-user',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiAdminRemoveFormRoute = ApiAdminRemoveFormRouteImport.update({
+  id: '/api/admin/remove-form',
+  path: '/api/admin/remove-form',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminEmailCsvReportRoute = ApiAdminEmailCsvReportRouteImport.update({
+  id: '/api/admin/email-csv-report',
+  path: '/api/admin/email-csv-report',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminCreateFormRoute = ApiAdminCreateFormRouteImport.update({
+  id: '/api/admin/create-form',
+  path: '/api/admin/create-form',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const PathlessLayoutNestedLayoutRouteBRoute =
   PathlessLayoutNestedLayoutRouteBRouteImport.update({
@@ -118,9 +203,18 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/customScript.js': typeof CustomScriptDotjsRoute
   '/deferred': typeof DeferredRoute
+  '/form': typeof FormRoute
   '/posts': typeof PostsRouteWithChildren
   '/redirect': typeof RedirectRoute
   '/users': typeof UsersRouteWithChildren
+  '/admin/create': typeof AdminCreateRoute
+  '/admin/forms': typeof AdminFormsRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/lookup': typeof AdminLookupRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/api/form-submission': typeof ApiFormSubmissionRoute
+  '/api/global-settings': typeof ApiGlobalSettingsRoute
+  '/api/submissions': typeof ApiSubmissionsRoute
   '/api/users': typeof ApiUsersRouteWithChildren
   '/posts/$postId': typeof PostsPostIdRoute
   '/users/$userId': typeof UsersUserIdRoute
@@ -128,6 +222,11 @@ export interface FileRoutesByFullPath {
   '/users/': typeof UsersIndexRoute
   '/route-a': typeof PathlessLayoutNestedLayoutRouteARoute
   '/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
+  '/api/admin/create-form': typeof ApiAdminCreateFormRoute
+  '/api/admin/email-csv-report': typeof ApiAdminEmailCsvReportRoute
+  '/api/admin/remove-form': typeof ApiAdminRemoveFormRoute
+  '/api/admin/submissions-by-user': typeof ApiAdminSubmissionsByUserRoute
+  '/api/admin/toggle-overwrite': typeof ApiAdminToggleOverwriteRoute
   '/api/users/$userId': typeof ApiUsersUserIdRoute
   '/posts/$postId/deep': typeof PostsPostIdDeepRoute
 }
@@ -135,7 +234,16 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/customScript.js': typeof CustomScriptDotjsRoute
   '/deferred': typeof DeferredRoute
+  '/form': typeof FormRoute
   '/redirect': typeof RedirectRoute
+  '/admin/create': typeof AdminCreateRoute
+  '/admin/forms': typeof AdminFormsRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/lookup': typeof AdminLookupRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/api/form-submission': typeof ApiFormSubmissionRoute
+  '/api/global-settings': typeof ApiGlobalSettingsRoute
+  '/api/submissions': typeof ApiSubmissionsRoute
   '/api/users': typeof ApiUsersRouteWithChildren
   '/posts/$postId': typeof PostsPostIdRoute
   '/users/$userId': typeof UsersUserIdRoute
@@ -143,6 +251,11 @@ export interface FileRoutesByTo {
   '/users': typeof UsersIndexRoute
   '/route-a': typeof PathlessLayoutNestedLayoutRouteARoute
   '/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
+  '/api/admin/create-form': typeof ApiAdminCreateFormRoute
+  '/api/admin/email-csv-report': typeof ApiAdminEmailCsvReportRoute
+  '/api/admin/remove-form': typeof ApiAdminRemoveFormRoute
+  '/api/admin/submissions-by-user': typeof ApiAdminSubmissionsByUserRoute
+  '/api/admin/toggle-overwrite': typeof ApiAdminToggleOverwriteRoute
   '/api/users/$userId': typeof ApiUsersUserIdRoute
   '/posts/$postId/deep': typeof PostsPostIdDeepRoute
 }
@@ -152,10 +265,19 @@ export interface FileRoutesById {
   '/_pathlessLayout': typeof PathlessLayoutRouteWithChildren
   '/customScript.js': typeof CustomScriptDotjsRoute
   '/deferred': typeof DeferredRoute
+  '/form': typeof FormRoute
   '/posts': typeof PostsRouteWithChildren
   '/redirect': typeof RedirectRoute
   '/users': typeof UsersRouteWithChildren
   '/_pathlessLayout/_nested-layout': typeof PathlessLayoutNestedLayoutRouteWithChildren
+  '/admin/create': typeof AdminCreateRoute
+  '/admin/forms': typeof AdminFormsRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/lookup': typeof AdminLookupRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/api/form-submission': typeof ApiFormSubmissionRoute
+  '/api/global-settings': typeof ApiGlobalSettingsRoute
+  '/api/submissions': typeof ApiSubmissionsRoute
   '/api/users': typeof ApiUsersRouteWithChildren
   '/posts/$postId': typeof PostsPostIdRoute
   '/users/$userId': typeof UsersUserIdRoute
@@ -163,6 +285,11 @@ export interface FileRoutesById {
   '/users/': typeof UsersIndexRoute
   '/_pathlessLayout/_nested-layout/route-a': typeof PathlessLayoutNestedLayoutRouteARoute
   '/_pathlessLayout/_nested-layout/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
+  '/api/admin/create-form': typeof ApiAdminCreateFormRoute
+  '/api/admin/email-csv-report': typeof ApiAdminEmailCsvReportRoute
+  '/api/admin/remove-form': typeof ApiAdminRemoveFormRoute
+  '/api/admin/submissions-by-user': typeof ApiAdminSubmissionsByUserRoute
+  '/api/admin/toggle-overwrite': typeof ApiAdminToggleOverwriteRoute
   '/api/users/$userId': typeof ApiUsersUserIdRoute
   '/posts_/$postId/deep': typeof PostsPostIdDeepRoute
 }
@@ -172,9 +299,18 @@ export interface FileRouteTypes {
     | '/'
     | '/customScript.js'
     | '/deferred'
+    | '/form'
     | '/posts'
     | '/redirect'
     | '/users'
+    | '/admin/create'
+    | '/admin/forms'
+    | '/admin/login'
+    | '/admin/lookup'
+    | '/admin/settings'
+    | '/api/form-submission'
+    | '/api/global-settings'
+    | '/api/submissions'
     | '/api/users'
     | '/posts/$postId'
     | '/users/$userId'
@@ -182,6 +318,11 @@ export interface FileRouteTypes {
     | '/users/'
     | '/route-a'
     | '/route-b'
+    | '/api/admin/create-form'
+    | '/api/admin/email-csv-report'
+    | '/api/admin/remove-form'
+    | '/api/admin/submissions-by-user'
+    | '/api/admin/toggle-overwrite'
     | '/api/users/$userId'
     | '/posts/$postId/deep'
   fileRoutesByTo: FileRoutesByTo
@@ -189,7 +330,16 @@ export interface FileRouteTypes {
     | '/'
     | '/customScript.js'
     | '/deferred'
+    | '/form'
     | '/redirect'
+    | '/admin/create'
+    | '/admin/forms'
+    | '/admin/login'
+    | '/admin/lookup'
+    | '/admin/settings'
+    | '/api/form-submission'
+    | '/api/global-settings'
+    | '/api/submissions'
     | '/api/users'
     | '/posts/$postId'
     | '/users/$userId'
@@ -197,6 +347,11 @@ export interface FileRouteTypes {
     | '/users'
     | '/route-a'
     | '/route-b'
+    | '/api/admin/create-form'
+    | '/api/admin/email-csv-report'
+    | '/api/admin/remove-form'
+    | '/api/admin/submissions-by-user'
+    | '/api/admin/toggle-overwrite'
     | '/api/users/$userId'
     | '/posts/$postId/deep'
   id:
@@ -205,10 +360,19 @@ export interface FileRouteTypes {
     | '/_pathlessLayout'
     | '/customScript.js'
     | '/deferred'
+    | '/form'
     | '/posts'
     | '/redirect'
     | '/users'
     | '/_pathlessLayout/_nested-layout'
+    | '/admin/create'
+    | '/admin/forms'
+    | '/admin/login'
+    | '/admin/lookup'
+    | '/admin/settings'
+    | '/api/form-submission'
+    | '/api/global-settings'
+    | '/api/submissions'
     | '/api/users'
     | '/posts/$postId'
     | '/users/$userId'
@@ -216,6 +380,11 @@ export interface FileRouteTypes {
     | '/users/'
     | '/_pathlessLayout/_nested-layout/route-a'
     | '/_pathlessLayout/_nested-layout/route-b'
+    | '/api/admin/create-form'
+    | '/api/admin/email-csv-report'
+    | '/api/admin/remove-form'
+    | '/api/admin/submissions-by-user'
+    | '/api/admin/toggle-overwrite'
     | '/api/users/$userId'
     | '/posts_/$postId/deep'
   fileRoutesById: FileRoutesById
@@ -225,10 +394,24 @@ export interface RootRouteChildren {
   PathlessLayoutRoute: typeof PathlessLayoutRouteWithChildren
   CustomScriptDotjsRoute: typeof CustomScriptDotjsRoute
   DeferredRoute: typeof DeferredRoute
+  FormRoute: typeof FormRoute
   PostsRoute: typeof PostsRouteWithChildren
   RedirectRoute: typeof RedirectRoute
   UsersRoute: typeof UsersRouteWithChildren
+  AdminCreateRoute: typeof AdminCreateRoute
+  AdminFormsRoute: typeof AdminFormsRoute
+  AdminLoginRoute: typeof AdminLoginRoute
+  AdminLookupRoute: typeof AdminLookupRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  ApiFormSubmissionRoute: typeof ApiFormSubmissionRoute
+  ApiGlobalSettingsRoute: typeof ApiGlobalSettingsRoute
+  ApiSubmissionsRoute: typeof ApiSubmissionsRoute
   ApiUsersRoute: typeof ApiUsersRouteWithChildren
+  ApiAdminCreateFormRoute: typeof ApiAdminCreateFormRoute
+  ApiAdminEmailCsvReportRoute: typeof ApiAdminEmailCsvReportRoute
+  ApiAdminRemoveFormRoute: typeof ApiAdminRemoveFormRoute
+  ApiAdminSubmissionsByUserRoute: typeof ApiAdminSubmissionsByUserRoute
+  ApiAdminToggleOverwriteRoute: typeof ApiAdminToggleOverwriteRoute
   PostsPostIdDeepRoute: typeof PostsPostIdDeepRoute
 }
 
@@ -253,6 +436,13 @@ declare module '@tanstack/solid-router' {
       path: '/posts'
       fullPath: '/posts'
       preLoaderRoute: typeof PostsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/form': {
+      id: '/form'
+      path: '/form'
+      fullPath: '/form'
+      preLoaderRoute: typeof FormRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/deferred': {
@@ -318,6 +508,62 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof ApiUsersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/submissions': {
+      id: '/api/submissions'
+      path: '/api/submissions'
+      fullPath: '/api/submissions'
+      preLoaderRoute: typeof ApiSubmissionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/global-settings': {
+      id: '/api/global-settings'
+      path: '/api/global-settings'
+      fullPath: '/api/global-settings'
+      preLoaderRoute: typeof ApiGlobalSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/form-submission': {
+      id: '/api/form-submission'
+      path: '/api/form-submission'
+      fullPath: '/api/form-submission'
+      preLoaderRoute: typeof ApiFormSubmissionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/admin/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/lookup': {
+      id: '/admin/lookup'
+      path: '/admin/lookup'
+      fullPath: '/admin/lookup'
+      preLoaderRoute: typeof AdminLookupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/forms': {
+      id: '/admin/forms'
+      path: '/admin/forms'
+      fullPath: '/admin/forms'
+      preLoaderRoute: typeof AdminFormsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/create': {
+      id: '/admin/create'
+      path: '/admin/create'
+      fullPath: '/admin/create'
+      preLoaderRoute: typeof AdminCreateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_pathlessLayout/_nested-layout': {
       id: '/_pathlessLayout/_nested-layout'
       path: ''
@@ -338,6 +584,41 @@ declare module '@tanstack/solid-router' {
       fullPath: '/api/users/$userId'
       preLoaderRoute: typeof ApiUsersUserIdRouteImport
       parentRoute: typeof ApiUsersRoute
+    }
+    '/api/admin/toggle-overwrite': {
+      id: '/api/admin/toggle-overwrite'
+      path: '/api/admin/toggle-overwrite'
+      fullPath: '/api/admin/toggle-overwrite'
+      preLoaderRoute: typeof ApiAdminToggleOverwriteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/submissions-by-user': {
+      id: '/api/admin/submissions-by-user'
+      path: '/api/admin/submissions-by-user'
+      fullPath: '/api/admin/submissions-by-user'
+      preLoaderRoute: typeof ApiAdminSubmissionsByUserRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/remove-form': {
+      id: '/api/admin/remove-form'
+      path: '/api/admin/remove-form'
+      fullPath: '/api/admin/remove-form'
+      preLoaderRoute: typeof ApiAdminRemoveFormRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/email-csv-report': {
+      id: '/api/admin/email-csv-report'
+      path: '/api/admin/email-csv-report'
+      fullPath: '/api/admin/email-csv-report'
+      preLoaderRoute: typeof ApiAdminEmailCsvReportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/create-form': {
+      id: '/api/admin/create-form'
+      path: '/api/admin/create-form'
+      fullPath: '/api/admin/create-form'
+      preLoaderRoute: typeof ApiAdminCreateFormRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_pathlessLayout/_nested-layout/route-b': {
       id: '/_pathlessLayout/_nested-layout/route-b'
@@ -427,10 +708,24 @@ const rootRouteChildren: RootRouteChildren = {
   PathlessLayoutRoute: PathlessLayoutRouteWithChildren,
   CustomScriptDotjsRoute: CustomScriptDotjsRoute,
   DeferredRoute: DeferredRoute,
+  FormRoute: FormRoute,
   PostsRoute: PostsRouteWithChildren,
   RedirectRoute: RedirectRoute,
   UsersRoute: UsersRouteWithChildren,
+  AdminCreateRoute: AdminCreateRoute,
+  AdminFormsRoute: AdminFormsRoute,
+  AdminLoginRoute: AdminLoginRoute,
+  AdminLookupRoute: AdminLookupRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
+  ApiFormSubmissionRoute: ApiFormSubmissionRoute,
+  ApiGlobalSettingsRoute: ApiGlobalSettingsRoute,
+  ApiSubmissionsRoute: ApiSubmissionsRoute,
   ApiUsersRoute: ApiUsersRouteWithChildren,
+  ApiAdminCreateFormRoute: ApiAdminCreateFormRoute,
+  ApiAdminEmailCsvReportRoute: ApiAdminEmailCsvReportRoute,
+  ApiAdminRemoveFormRoute: ApiAdminRemoveFormRoute,
+  ApiAdminSubmissionsByUserRoute: ApiAdminSubmissionsByUserRoute,
+  ApiAdminToggleOverwriteRoute: ApiAdminToggleOverwriteRoute,
   PostsPostIdDeepRoute: PostsPostIdDeepRoute,
 }
 export const routeTree = rootRouteImport
