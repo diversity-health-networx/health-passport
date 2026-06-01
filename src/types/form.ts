@@ -1,6 +1,17 @@
 export type QuestionType = 'likert' | 'scale_1_10' | 'text' | 'numerical' | 'boolean'
 export type TextRegexFormat = 'email' | 'phone' | 'custom'
 
+export interface FormTableColumns {
+  id: string;                 // UUIDv7
+  name: string;               // Unique form name
+  user_id_format: string;     // Format string for identifying users
+  allow_overwrite: number;    // 0 or 1 (SQLite has no boolean type)
+  submissions_expiry: number | null; // Nullable UNIX timestamp
+  questions_json: string;     // JSON string
+  created_at: number;         // UNIX timestamp
+}
+
+
 export interface FormFieldSettings {
   required: boolean
   // Configuration parameters specific to 'text' types
@@ -29,4 +40,11 @@ export interface DynamicFormSchema {
   allowOverwrite?: boolean
   submissionsExpiry?: number | null // UNIX timestamp for expiry
   fieldCollection: FormField[]
+}
+
+export interface SubmissionRequestBody {
+    formId: string
+    userId: string
+    formName: string
+    answers: unknown
 }
