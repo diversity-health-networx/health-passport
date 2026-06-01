@@ -23,7 +23,6 @@ Migrate all features from `../health-passport(old)` to the working `health-passp
 | DynamicFormSchema | src/types/schema.ts | Form schema interface with field types, metadata | ❌ Missing |
 | QuestionType | src/types/schema.ts | Union type: text, numerical, scale_1_10, boolean, likert | ❌ Missing |
 | extractTimestampFromUUIDv7 | src/utils/uuid.ts | Extract time from UUIDv7 IDs | ❌ Missing (exists but may differ) |
-| generateId | src/utils/uuid.ts | Generate UUIDv7 identifiers | ❌ Missing (exists but may differ) |
 | Auth helpers | src/utils/auth.ts | Magic link and auth utilities | ❌ Missing |
 
 ### 2. API Routes (src/routes/api/-[form].ts)
