@@ -12,6 +12,7 @@ import { DefaultCatchBoundary } from '~/components/DefaultCatchBoundary'
 import { NotFound } from '~/components/NotFound'
 import appCss from '~/styles/app.css?url'
 import { seo } from '~/utils/seo'
+import { SolidQueryDevtools } from '@tanstack/solid-query-devtools'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -126,6 +127,7 @@ function RootDocument({ children }: { children: Solid.JSX.Element }) {
         <hr />
         {children}
         <TanStackRouterDevtools position="bottom-right" />
+        <SolidQueryDevtools buttonPosition="bottom-left" />
         <Scripts />
       </body>
     </html>
