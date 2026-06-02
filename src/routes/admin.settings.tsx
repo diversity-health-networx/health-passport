@@ -1,9 +1,15 @@
-import { createFileRoute } from '@tanstack/solid-router'
+import { createFileRoute, redirect } from '@tanstack/solid-router'
 import { createSignal, createEffect } from 'solid-js'
 import { createQuery, useQueryClient } from '@tanstack/solid-query'
+import { getAuth } from '~/utils/authStore'
 import styles from './AdminSettings.module.css'
 
 export const Route = createFileRoute('/admin/settings')({
+  beforeLoad: () => {
+    if (!getAuth().user) {
+      throw redirect({ to: '/admin/login', search: { auth: undefined } })
+    }
+  },
   component: AdminSettings,
 })
 

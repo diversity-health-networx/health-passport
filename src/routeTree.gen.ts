@@ -28,6 +28,7 @@ import { Route as ApiAdminToggleOverwriteRouteImport } from './routes/api/admin/
 import { Route as ApiAdminToggleExpiryRouteImport } from './routes/api/admin/toggle-expiry'
 import { Route as ApiAdminSubmissionsByUserRouteImport } from './routes/api/admin/submissions-by-user'
 import { Route as ApiAdminRemoveFormRouteImport } from './routes/api/admin/remove-form'
+import { Route as ApiAdminRefreshAuthRouteImport } from './routes/api/admin/refresh-auth'
 import { Route as ApiAdminLogoutRouteImport } from './routes/api/admin/logout'
 import { Route as ApiAdminLoginRouteImport } from './routes/api/admin/login'
 import { Route as ApiAdminGetAllFormsRouteImport } from './routes/api/admin/get-all-forms'
@@ -131,6 +132,11 @@ const ApiAdminRemoveFormRoute = ApiAdminRemoveFormRouteImport.update({
   path: '/api/admin/remove-form',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAdminRefreshAuthRoute = ApiAdminRefreshAuthRouteImport.update({
+  id: '/api/admin/refresh-auth',
+  path: '/api/admin/refresh-auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAdminLogoutRoute = ApiAdminLogoutRouteImport.update({
   id: '/api/admin/logout',
   path: '/api/admin/logout',
@@ -190,6 +196,7 @@ export interface FileRoutesByFullPath {
   '/api/admin/get-all-forms': typeof ApiAdminGetAllFormsRoute
   '/api/admin/login': typeof ApiAdminLoginRoute
   '/api/admin/logout': typeof ApiAdminLogoutRoute
+  '/api/admin/refresh-auth': typeof ApiAdminRefreshAuthRoute
   '/api/admin/remove-form': typeof ApiAdminRemoveFormRoute
   '/api/admin/submissions-by-user': typeof ApiAdminSubmissionsByUserRoute
   '/api/admin/toggle-expiry': typeof ApiAdminToggleExpiryRoute
@@ -216,6 +223,7 @@ export interface FileRoutesByTo {
   '/api/admin/get-all-forms': typeof ApiAdminGetAllFormsRoute
   '/api/admin/login': typeof ApiAdminLoginRoute
   '/api/admin/logout': typeof ApiAdminLogoutRoute
+  '/api/admin/refresh-auth': typeof ApiAdminRefreshAuthRoute
   '/api/admin/remove-form': typeof ApiAdminRemoveFormRoute
   '/api/admin/submissions-by-user': typeof ApiAdminSubmissionsByUserRoute
   '/api/admin/toggle-expiry': typeof ApiAdminToggleExpiryRoute
@@ -245,6 +253,7 @@ export interface FileRoutesById {
   '/api/admin/get-all-forms': typeof ApiAdminGetAllFormsRoute
   '/api/admin/login': typeof ApiAdminLoginRoute
   '/api/admin/logout': typeof ApiAdminLogoutRoute
+  '/api/admin/refresh-auth': typeof ApiAdminRefreshAuthRoute
   '/api/admin/remove-form': typeof ApiAdminRemoveFormRoute
   '/api/admin/submissions-by-user': typeof ApiAdminSubmissionsByUserRoute
   '/api/admin/toggle-expiry': typeof ApiAdminToggleExpiryRoute
@@ -273,6 +282,7 @@ export interface FileRouteTypes {
     | '/api/admin/get-all-forms'
     | '/api/admin/login'
     | '/api/admin/logout'
+    | '/api/admin/refresh-auth'
     | '/api/admin/remove-form'
     | '/api/admin/submissions-by-user'
     | '/api/admin/toggle-expiry'
@@ -299,6 +309,7 @@ export interface FileRouteTypes {
     | '/api/admin/get-all-forms'
     | '/api/admin/login'
     | '/api/admin/logout'
+    | '/api/admin/refresh-auth'
     | '/api/admin/remove-form'
     | '/api/admin/submissions-by-user'
     | '/api/admin/toggle-expiry'
@@ -327,6 +338,7 @@ export interface FileRouteTypes {
     | '/api/admin/get-all-forms'
     | '/api/admin/login'
     | '/api/admin/logout'
+    | '/api/admin/refresh-auth'
     | '/api/admin/remove-form'
     | '/api/admin/submissions-by-user'
     | '/api/admin/toggle-expiry'
@@ -352,6 +364,7 @@ export interface RootRouteChildren {
   ApiAdminGetAllFormsRoute: typeof ApiAdminGetAllFormsRoute
   ApiAdminLoginRoute: typeof ApiAdminLoginRoute
   ApiAdminLogoutRoute: typeof ApiAdminLogoutRoute
+  ApiAdminRefreshAuthRoute: typeof ApiAdminRefreshAuthRoute
   ApiAdminRemoveFormRoute: typeof ApiAdminRemoveFormRoute
   ApiAdminSubmissionsByUserRoute: typeof ApiAdminSubmissionsByUserRoute
   ApiAdminToggleExpiryRoute: typeof ApiAdminToggleExpiryRoute
@@ -493,6 +506,13 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof ApiAdminRemoveFormRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/admin/refresh-auth': {
+      id: '/api/admin/refresh-auth'
+      path: '/api/admin/refresh-auth'
+      fullPath: '/api/admin/refresh-auth'
+      preLoaderRoute: typeof ApiAdminRefreshAuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/admin/logout': {
       id: '/api/admin/logout'
       path: '/api/admin/logout'
@@ -604,6 +624,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAdminGetAllFormsRoute: ApiAdminGetAllFormsRoute,
   ApiAdminLoginRoute: ApiAdminLoginRoute,
   ApiAdminLogoutRoute: ApiAdminLogoutRoute,
+  ApiAdminRefreshAuthRoute: ApiAdminRefreshAuthRoute,
   ApiAdminRemoveFormRoute: ApiAdminRemoveFormRoute,
   ApiAdminSubmissionsByUserRoute: ApiAdminSubmissionsByUserRoute,
   ApiAdminToggleExpiryRoute: ApiAdminToggleExpiryRoute,

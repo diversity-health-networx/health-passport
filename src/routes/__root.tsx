@@ -3,31 +3,22 @@ import {
   HeadContent,
   Link,
   Scripts,
+  Outlet,
   createRootRoute,
-  Outlet, // 1. Import Outlet
+  useNavigate,
+  useRouter,
 } from '@tanstack/solid-router'
 import { TanStackRouterDevtools } from '@tanstack/solid-router-devtools'
 import { HydrationScript } from 'solid-js/web'
 import type * as Solid from 'solid-js'
-import { Show, createContext, useContext } from 'solid-js'
+import { Show, onMount } from 'solid-js'
 import { DefaultCatchBoundary } from '~/components/DefaultCatchBoundary'
 import { NotFound } from '~/components/NotFound'
 import appCss from '~/styles/app.css?url'
 import { seo } from '~/utils/seo'
 import { SolidQueryDevtools } from '@tanstack/solid-query-devtools'
 import { QueryClient, QueryClientProvider } from '@tanstack/solid-query'
-
-interface globalContext {
-  auth: {
-    user?: string;
-    key?: CryptoKey;
-    nonce?: string;
-  };
-}
-
-export const globals: globalContext = { auth: {} };
-
-const Context = createContext(globals);
+import { getAuth, setAuthState } from '~/utils/authStore'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -54,29 +45,64 @@ export const Route = createRootRoute({
   errorComponent: DefaultCatchBoundary,
   notFoundComponent: () => <NotFound />,
   shellComponent: RootDocument,
-  component: RootLayout, // 2. Add the component layout here
+  component: RootLayout,
 })
 
-// 3. Define the RootLayout component to wrap the routing context
+// RootLayout renders the router outlet and query client providers.
 function RootLayout() {
-  // Instantiating here runs once per request on SSR and once on client boot, 
-  // keeping it isolated and completely safe from cross-user state leaks.
   const queryClient = new QueryClient()
 
   return (
-    <Context.Provider value={Context.defaultValue}>
-      <QueryClientProvider client={queryClient}>
-        <Outlet />
-        {/* Move the query devtools inside the provider so they can see the client too */}
-        <SolidQueryDevtools buttonPosition="bottom-left" />
-      </QueryClientProvider>
-    </Context.Provider>
+    <QueryClientProvider client={queryClient}>
+      <Outlet />
+      <SolidQueryDevtools buttonPosition="bottom-left" />
+    </QueryClientProvider>
   )
 }
 
+// Shell document: header, logout handler, and page content.
 function RootDocument({ children }: { children: Solid.JSX.Element }) {
+  const router = useRouter() as any
+  const navigate = useNavigate()
 
-  const globalContext = useContext(Context);
+  // Restore auth from cookie on mount so the shell reacts to session state.
+  onMount(async () => {
+    try {
+      const response = await fetch('/api/admin/refresh-auth', {
+        method: 'POST',
+        credentials: 'include',
+      })
+      if (response.ok) {
+        const data = (await response.json()) as { success: boolean; user?: string; role?: string }
+        if (data.user && data.role) {
+          setAuthState({ user: data.user, role: data.role as 'admin' })
+        }
+      }
+    } catch {
+      // ignore
+    }
+  })
+
+  async function logout(e: MouseEvent) {
+    e.preventDefault()
+
+    const res = await fetch('/api/admin/logout', {
+      method: 'POST',
+      credentials: 'include',
+    })
+
+    if (!res.ok) {
+      console.error('Logout failed')
+      return
+    }
+
+    // Clear auth state
+    setAuthState({})
+
+    navigate({ to: '/admin/login', search: { auth: undefined } })
+  }
+
+  const isAdmin = () => !!getAuth().user
 
   return (
     <html>
@@ -86,17 +112,17 @@ function RootDocument({ children }: { children: Solid.JSX.Element }) {
       <body>
         <HeadContent />
         <div class="p-2 flex gap-4 text-sm mx-2">
-          <Link to="/" activeProps={{ class: 'font-bold' }} activeOptions={{ exact: true }}>Home</Link>{' '}
-          <Link to="/admin/lookup" activeProps={{ class: 'font-bold' }}>search</Link>{' '}
-          <Show when={!globalContext.auth.user} fallback={
+          <Link to="/" activeProps={{ class: 'font-bold' }} activeOptions={{ exact: true }}>Home</Link>
+          <Link to="/admin/lookup" activeProps={{ class: 'font-bold' }}>search</Link>
+          <Show when={!isAdmin()} fallback={
             <>
-              <Link to="/admin/forms" class='ml-auto' activeProps={{ class: 'font-bold' }}>forms</Link>{' '}
-              <Link to="/admin/lookup" activeProps={{ class: 'font-bold' }}>search</Link>{' '}
-              <Link to="/admin/create" activeProps={{ class: 'font-bold' }}>create</Link>{' '}
-              <Link to="/admin/settings" activeProps={{ class: 'font-bold' }}>settings</Link>{' '}
+              <Link to="/admin/forms" class='ml-auto' activeProps={{ class: 'font-bold' }}>forms</Link>
+              <Link to="/admin/lookup" class='ml-auto' activeProps={{ class: 'font-bold' }}>search</Link>
+              <Link to="/admin/create" class='ml-auto' activeProps={{ class: 'font-bold' }}>create</Link>
+              <Link to="/admin/settings" class='ml-auto' activeProps={{ class: 'font-bold' }}>settings</Link>
             </>
           }>
-            <Link to="/admin/login" class='ml-auto' activeProps={{ class: 'font-bold' }} search={{auth: undefined}}>login</Link>{' '}
+            <Link to="/admin/login" class='ml-auto' activeProps={{ class: 'font-bold' }} search={{auth: undefined}}>login</Link>
           </Show>
         </div>
         <hr />

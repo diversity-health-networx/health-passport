@@ -1,8 +1,14 @@
-import { createFileRoute } from '@tanstack/solid-router'
+import { createFileRoute, redirect } from '@tanstack/solid-router'
 import { createSignal, For, Show } from 'solid-js'
 import type { QuestionType } from '~/types/form'
+import { getAuth } from '~/utils/authStore'
 
 export const Route = createFileRoute('/admin/create')({
+  beforeLoad: () => {
+    if (!getAuth().user) {
+      throw redirect({ to: '/admin/login', search: { auth: undefined } })
+    }
+  },
   component: FormSchemaBuilderWorkspace,
 })
 

@@ -1,9 +1,15 @@
-import { createFileRoute } from '@tanstack/solid-router'
+import { createFileRoute, redirect } from '@tanstack/solid-router'
 import { For, Show } from 'solid-js'
 import { createQuery } from '@tanstack/solid-query'
+import { getAuth } from '~/utils/authStore'
 import styles from './AdminForms.module.css'
 
 export const Route = createFileRoute('/admin/forms')({
+  beforeLoad: () => {
+    if (!getAuth().user) {
+      throw redirect({ to: '/admin/login', search: { auth: undefined } })
+    }
+  },
   component: AdminFormsDashboard,
 })
 
