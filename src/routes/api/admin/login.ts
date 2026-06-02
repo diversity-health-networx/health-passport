@@ -42,7 +42,7 @@ export const Route = createFileRoute('/api/admin/login')({
             httpOnly: true,
             secure: true, // Requires HTTPS
             path: '/',
-            maxAge: 900, // 15 minutes (in seconds)
+            maxAge: 28800, // 8 hours (in seconds)
             sameSite: 'strict'
           })
 
