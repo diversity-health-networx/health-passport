@@ -198,7 +198,7 @@ function FormSchemaBuilderWorkspace() {
           disabled={!formName() || fields().length === 0}
           class="px-4 py-2 bg-indigo-600 text-white rounded text-sm font-medium hover:bg-indigo-700 hover::opacity-70 disabled:opacity-60 hover:cursor-pointer"
         >
-          Save Form Schema
+          Save Form
         </button>
       </div>
     </div>

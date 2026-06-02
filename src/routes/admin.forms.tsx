@@ -28,7 +28,7 @@ function AdminFormsDashboard() {
       <div class={styles.header}>
         <h1 class={styles.title}>Manage Forms</h1>
         <a href="/admin/create" class={`${styles.btn} ${styles.createBtn}`}>
-          Create Form Schema
+          Create Form
         </a>
       </div>
 
