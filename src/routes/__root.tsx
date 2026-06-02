@@ -96,7 +96,7 @@ function RootDocument({ children }: { children: Solid.JSX.Element }) {
               <Link to="/admin/settings" activeProps={{ class: 'font-bold' }}>settings</Link>{' '}
             </>
           }>
-            <Link to="/admin/login" class='ml-auto' activeProps={{ class: 'font-bold' }}>login</Link>{' '}
+            <Link to="/admin/login" class='ml-auto' activeProps={{ class: 'font-bold' }} search={{auth: undefined}}>login</Link>{' '}
           </Show>
         </div>
         <hr />
