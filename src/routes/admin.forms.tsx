@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from '@tanstack/solid-router'
+import { createFileRoute, Link, redirect } from '@tanstack/solid-router'
 import { For, Show } from 'solid-js'
 import { createQuery } from '@tanstack/solid-query'
 import { getAuth } from '~/utils/authStore'
@@ -33,9 +33,9 @@ function AdminFormsDashboard() {
     <div class={styles.container}>
       <div class={styles.header}>
         <h1 class={styles.title}>Manage Forms</h1>
-        <a href="/admin/create" class={`${styles.btn} ${styles.createBtn}`}>
+        <Link to="/admin/create" class={`${styles.btn} ${styles.createBtn}`}>
           Create Form
-        </a>
+        </Link>
       </div>
 
       <div class={styles.tableContainer}>
