@@ -13,6 +13,8 @@ import { NotFound } from '~/components/NotFound'
 import appCss from '~/styles/app.css?url'
 import { seo } from '~/utils/seo'
 import { SolidQueryDevtools } from '@tanstack/solid-query-devtools'
+// 1. Import QueryClient and QueryClientProvider
+import { QueryClient, QueryClientProvider } from '@tanstack/solid-query'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -25,8 +27,7 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       ...seo({
-        title:
-          'DHN Health Passport',
+        title: 'DHN Health Passport',
         description: `Health Passport is an online survey platform for admin and participant use`,
       }),
     ],
@@ -52,12 +53,13 @@ export const Route = createRootRoute({
       { rel: 'manifest', href: '/site.webmanifest', color: '#fffff' },
       { rel: 'icon', href: '/favicon.ico' },
     ],
-    scripts: [
+    // TODO add posthog client-side script here
+    /* scripts: [
       {
         src: '/customScript.js',
         type: 'text/javascript',
       },
-    ],
+    ], */
   }),
   errorComponent: DefaultCatchBoundary,
   notFoundComponent: () => <NotFound />,
@@ -65,71 +67,77 @@ export const Route = createRootRoute({
 })
 
 function RootDocument({ children }: { children: Solid.JSX.Element }) {
+  // 2. Instantiate the client (Safe from state leaks in SSR because Solid setups run once per request/session)
+  const queryClient = new QueryClient()
+
   return (
-    <html>
-      <head>
-        <HydrationScript />
-      </head>
-      <body>
-        <HeadContent />
-        <div class="p-2 flex gap-2 text-lg">
-          <Link
-            to="/"
-            activeProps={{
-              class: 'font-bold',
-            }}
-            activeOptions={{ exact: true }}
-          >
-            Home
-          </Link>{' '}
-          <Link
-            to="/posts"
-            activeProps={{
-              class: 'font-bold',
-            }}
-          >
-            Posts
-          </Link>{' '}
-          <Link
-            to="/users"
-            activeProps={{
-              class: 'font-bold',
-            }}
-          >
-            Users
-          </Link>{' '}
-          <Link
-            to="/route-a"
-            activeProps={{
-              class: 'font-bold',
-            }}
-          >
-            Pathless Layout
-          </Link>{' '}
-          <Link
-            to="/deferred"
-            activeProps={{
-              class: 'font-bold',
-            }}
-          >
-            Deferred
-          </Link>{' '}
-          <Link
-            // @ts-expect-error
-            to="/this-route-does-not-exist"
-            activeProps={{
-              class: 'font-bold',
-            }}
-          >
-            This Route Does Not Exist
-          </Link>
-        </div>
-        <hr />
-        {children}
-        <TanStackRouterDevtools position="bottom-right" />
-        <SolidQueryDevtools buttonPosition="bottom-left" />
-        <Scripts />
-      </body>
-    </html>
+    // 3. Wrap the root layout inside the Provider
+    <QueryClientProvider client={queryClient}>
+      <html>
+        <head>
+          <HydrationScript />
+        </head>
+        <body>
+          <HeadContent />
+          <div class="p-2 flex gap-2 text-lg">
+            <Link
+              to="/"
+              activeProps={{
+                class: 'font-bold',
+              }}
+              activeOptions={{ exact: true }}
+            >
+              Home
+            </Link>{' '}
+            <Link
+              to="/posts"
+              activeProps={{
+                class: 'font-bold',
+              }}
+            >
+              Posts
+            </Link>{' '}
+            <Link
+              to="/users"
+              activeProps={{
+                class: 'font-bold',
+              }}
+            >
+              Users
+            </Link>{' '}
+            <Link
+              to="/route-a"
+              activeProps={{
+                class: 'font-bold',
+              }}
+            >
+              Pathless Layout
+            </Link>{' '}
+            <Link
+              to="/deferred"
+              activeProps={{
+                class: 'font-bold',
+              }}
+            >
+              Deferred
+            </Link>{' '}
+            <Link
+              // @ts-expect-error
+              to="/this-route-does-not-exist"
+              activeProps={{
+                class: 'font-bold',
+              }}
+            >
+              This Route Does Not Exist
+            </Link>
+          </div>
+          <hr />
+          {children}
+          <TanStackRouterDevtools position="bottom-right" />
+          <SolidQueryDevtools buttonPosition="bottom-left" />
+          <Scripts />
+        </body>
+      </html>
+    </QueryClientProvider>
   )
 }
