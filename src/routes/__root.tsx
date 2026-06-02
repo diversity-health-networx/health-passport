@@ -25,8 +25,8 @@ export const Route = createRootRoute({
       },
       ...seo({
         title:
-          'TanStack Start | Type-Safe, Client-First, Full-Stack React Framework',
-        description: `TanStack Start is a type-safe, client-first, full-stack React framework. `,
+          'DHN Health Passport',
+        description: `Health Passport is an online survey platform for admin and participant use`,
       }),
     ],
     links: [
