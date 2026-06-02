@@ -73,7 +73,7 @@ export const Route = createFileRoute('/api/admin/login')({
             
             // Construct the verification URL that the user will click in their email
             // Note: This uses the current url and adds the authenticated query param
-            const targetUrl = `${url.origin}${url.pathname}?auth=${token}`
+            const targetUrl = `${url.origin}/admin/login?auth=${token}`
 
             await dispatchMagicLinkEmail(body.email, targetUrl, postmarkKey)
 
