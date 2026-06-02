@@ -134,7 +134,7 @@
 }
 
 .checkbox:hover {
-  border-color: #94a3b8;
+  border-color: #3c434d;
 }
 
 .checkbox:checked {
@@ -270,7 +270,7 @@
 
 .panelPlaceholder {
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: #3c434d;
   text-align: center;
   padding: 3rem 0;
 }
@@ -282,7 +282,7 @@
 .fieldLabel {
   font-size: 0.75rem;
   font-weight: 700;
-  color: #94a3b8;
+  color: #3c434d;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-bottom: 0.5rem;
