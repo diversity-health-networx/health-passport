@@ -8,7 +8,7 @@ export function checkDomainClearance(email: string): boolean {
 
 export async function sealAdminAuthToken(email: string, appSecret: string): Promise<string> {
   const secretBuffer = new TextEncoder().encode(appSecret)
-  return await new SignJWT({ context: 'admin-dashboard-access' })
+  return await new SignJWT({ context: 'admin' })
     .setProtectedHeader({ alg: 'HS256' })
     .setSubject(email.toLowerCase())
     .setIssuedAt()
@@ -20,7 +20,7 @@ export async function verifyAdminAuthToken(token: string, appSecret: string): Pr
   try {
     const secretBuffer = new TextEncoder().encode(appSecret)
     const { payload } = await jwtVerify(token, secretBuffer, { algorithms: ['HS256'] })
-    if (payload.context !== 'admin-dashboard-access' || !payload.sub) return null
+    if (payload.context !== 'admin' || !payload.sub) return null
     return payload.sub
   } catch {
     return null

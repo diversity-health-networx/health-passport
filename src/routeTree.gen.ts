@@ -28,6 +28,8 @@ import { Route as ApiAdminToggleOverwriteRouteImport } from './routes/api/admin/
 import { Route as ApiAdminToggleExpiryRouteImport } from './routes/api/admin/toggle-expiry'
 import { Route as ApiAdminSubmissionsByUserRouteImport } from './routes/api/admin/submissions-by-user'
 import { Route as ApiAdminRemoveFormRouteImport } from './routes/api/admin/remove-form'
+import { Route as ApiAdminLogoutRouteImport } from './routes/api/admin/logout'
+import { Route as ApiAdminLoginRouteImport } from './routes/api/admin/login'
 import { Route as ApiAdminGetAllFormsRouteImport } from './routes/api/admin/get-all-forms'
 import { Route as ApiAdminEmailCsvReportRouteImport } from './routes/api/admin/email-csv-report'
 import { Route as ApiAdminCreateFormRouteImport } from './routes/api/admin/create-form'
@@ -129,6 +131,16 @@ const ApiAdminRemoveFormRoute = ApiAdminRemoveFormRouteImport.update({
   path: '/api/admin/remove-form',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAdminLogoutRoute = ApiAdminLogoutRouteImport.update({
+  id: '/api/admin/logout',
+  path: '/api/admin/logout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminLoginRoute = ApiAdminLoginRouteImport.update({
+  id: '/api/admin/login',
+  path: '/api/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAdminGetAllFormsRoute = ApiAdminGetAllFormsRouteImport.update({
   id: '/api/admin/get-all-forms',
   path: '/api/admin/get-all-forms',
@@ -176,6 +188,8 @@ export interface FileRoutesByFullPath {
   '/api/admin/create-form': typeof ApiAdminCreateFormRoute
   '/api/admin/email-csv-report': typeof ApiAdminEmailCsvReportRoute
   '/api/admin/get-all-forms': typeof ApiAdminGetAllFormsRoute
+  '/api/admin/login': typeof ApiAdminLoginRoute
+  '/api/admin/logout': typeof ApiAdminLogoutRoute
   '/api/admin/remove-form': typeof ApiAdminRemoveFormRoute
   '/api/admin/submissions-by-user': typeof ApiAdminSubmissionsByUserRoute
   '/api/admin/toggle-expiry': typeof ApiAdminToggleExpiryRoute
@@ -200,6 +214,8 @@ export interface FileRoutesByTo {
   '/api/admin/create-form': typeof ApiAdminCreateFormRoute
   '/api/admin/email-csv-report': typeof ApiAdminEmailCsvReportRoute
   '/api/admin/get-all-forms': typeof ApiAdminGetAllFormsRoute
+  '/api/admin/login': typeof ApiAdminLoginRoute
+  '/api/admin/logout': typeof ApiAdminLogoutRoute
   '/api/admin/remove-form': typeof ApiAdminRemoveFormRoute
   '/api/admin/submissions-by-user': typeof ApiAdminSubmissionsByUserRoute
   '/api/admin/toggle-expiry': typeof ApiAdminToggleExpiryRoute
@@ -227,6 +243,8 @@ export interface FileRoutesById {
   '/api/admin/create-form': typeof ApiAdminCreateFormRoute
   '/api/admin/email-csv-report': typeof ApiAdminEmailCsvReportRoute
   '/api/admin/get-all-forms': typeof ApiAdminGetAllFormsRoute
+  '/api/admin/login': typeof ApiAdminLoginRoute
+  '/api/admin/logout': typeof ApiAdminLogoutRoute
   '/api/admin/remove-form': typeof ApiAdminRemoveFormRoute
   '/api/admin/submissions-by-user': typeof ApiAdminSubmissionsByUserRoute
   '/api/admin/toggle-expiry': typeof ApiAdminToggleExpiryRoute
@@ -253,6 +271,8 @@ export interface FileRouteTypes {
     | '/api/admin/create-form'
     | '/api/admin/email-csv-report'
     | '/api/admin/get-all-forms'
+    | '/api/admin/login'
+    | '/api/admin/logout'
     | '/api/admin/remove-form'
     | '/api/admin/submissions-by-user'
     | '/api/admin/toggle-expiry'
@@ -277,6 +297,8 @@ export interface FileRouteTypes {
     | '/api/admin/create-form'
     | '/api/admin/email-csv-report'
     | '/api/admin/get-all-forms'
+    | '/api/admin/login'
+    | '/api/admin/logout'
     | '/api/admin/remove-form'
     | '/api/admin/submissions-by-user'
     | '/api/admin/toggle-expiry'
@@ -303,6 +325,8 @@ export interface FileRouteTypes {
     | '/api/admin/create-form'
     | '/api/admin/email-csv-report'
     | '/api/admin/get-all-forms'
+    | '/api/admin/login'
+    | '/api/admin/logout'
     | '/api/admin/remove-form'
     | '/api/admin/submissions-by-user'
     | '/api/admin/toggle-expiry'
@@ -326,6 +350,8 @@ export interface RootRouteChildren {
   ApiAdminCreateFormRoute: typeof ApiAdminCreateFormRoute
   ApiAdminEmailCsvReportRoute: typeof ApiAdminEmailCsvReportRoute
   ApiAdminGetAllFormsRoute: typeof ApiAdminGetAllFormsRoute
+  ApiAdminLoginRoute: typeof ApiAdminLoginRoute
+  ApiAdminLogoutRoute: typeof ApiAdminLogoutRoute
   ApiAdminRemoveFormRoute: typeof ApiAdminRemoveFormRoute
   ApiAdminSubmissionsByUserRoute: typeof ApiAdminSubmissionsByUserRoute
   ApiAdminToggleExpiryRoute: typeof ApiAdminToggleExpiryRoute
@@ -467,6 +493,20 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof ApiAdminRemoveFormRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/admin/logout': {
+      id: '/api/admin/logout'
+      path: '/api/admin/logout'
+      fullPath: '/api/admin/logout'
+      preLoaderRoute: typeof ApiAdminLogoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/login': {
+      id: '/api/admin/login'
+      path: '/api/admin/login'
+      fullPath: '/api/admin/login'
+      preLoaderRoute: typeof ApiAdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/admin/get-all-forms': {
       id: '/api/admin/get-all-forms'
       path: '/api/admin/get-all-forms'
@@ -562,6 +602,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAdminCreateFormRoute: ApiAdminCreateFormRoute,
   ApiAdminEmailCsvReportRoute: ApiAdminEmailCsvReportRoute,
   ApiAdminGetAllFormsRoute: ApiAdminGetAllFormsRoute,
+  ApiAdminLoginRoute: ApiAdminLoginRoute,
+  ApiAdminLogoutRoute: ApiAdminLogoutRoute,
   ApiAdminRemoveFormRoute: ApiAdminRemoveFormRoute,
   ApiAdminSubmissionsByUserRoute: ApiAdminSubmissionsByUserRoute,
   ApiAdminToggleExpiryRoute: ApiAdminToggleExpiryRoute,
