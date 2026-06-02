@@ -1,4 +1,4 @@
-import { createSignal, For, Show } from 'solid-js'
+import { createSignal, For, Show, createMemo } from 'solid-js'
 import { createForm } from '@tanstack/solid-form'
 import type { DynamicFormSchema } from '~/types/form'
 import { ErrorModal } from './ErrorModal'
@@ -27,19 +27,24 @@ export function PublicFormView(props: PublicFormViewProps) {
     return props.form.submissionsExpiry <= Math.floor(Date.now() / 1000)
   }
 
+  // Memoize defaultValues so the form isn't re-initialized on every keystroke.
+  // Without this, createForm's getter recalculates on every render triggered by
+  // form state changes, which recreates inputs and steals focus.
+  const defaultValues = createMemo(() => ({
+    userId: props.searchParams.user_id ?? '',
+    ...Object.fromEntries(
+      props.form.fieldCollection.map(field => [
+        field.machineSlug,
+        field.metaSettings.autoPopulateFromUrl && field.metaSettings.targetQueryParameterName
+          ? props.searchParams[field.metaSettings.targetQueryParameterName] ?? ''
+          : '',
+      ])
+    ),
+  }))
+
   // Initialize form with auto-populated values from URL
   const form = createForm(() => ({
-    defaultValues: {
-      userId: props.searchParams.user_id ?? '',
-      ...Object.fromEntries(
-        props.form.fieldCollection.map(field => [
-          field.machineSlug,
-          field.metaSettings.autoPopulateFromUrl && field.metaSettings.targetQueryParameterName
-            ? props.searchParams[field.metaSettings.targetQueryParameterName] ?? ''
-            : '',
-        ])
-      ),
-    },
+    defaultValues: defaultValues(),
     onSubmit: async ({ value }) => {
       setSubmitStatus('submitting')
       try {
