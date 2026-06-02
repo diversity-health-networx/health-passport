@@ -22,7 +22,7 @@
 .title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #1e293b;
+  color: #4170bb;
   margin-bottom: 0.25rem;
 }
 
@@ -129,6 +129,7 @@
 
 .actionLink:hover {
   color: #4338ca;
+  cursor: pointer;
 }
 
 .deleteAction {
@@ -140,10 +141,48 @@
 
 .deleteAction:hover {
   color: #b91c1c;
+  cursor: pointer;
 }
 
 .emptyState {
   padding: 2rem;
   text-align: center;
   color: #94a3b8;
+}
+
+.skeletonRow {
+  border-top: 1px solid #e2e8f0;
+}
+
+.skeletonCell {
+  padding: 1rem;
+}
+
+.skeletonBlock {
+  height: 1rem;
+  border-radius: 0.25rem;
+  background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeletonBlockShort {
+  width: 60%;
+}
+
+.skeletonBlockMedium {
+  width: 80%;
+}
+
+.skeletonBlockLong {
+  width: 95%;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }

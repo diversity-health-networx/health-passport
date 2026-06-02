@@ -54,7 +54,7 @@ function FormSchemaBuilderWorkspace() {
   }
 
   return (
-    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow border">
+    <div class="max-w-4xl mx-auto my-12 bg-white p-8 rounded-lg shadow border">
       <h1 class="text-2xl font-bold tracking-tight text-slate-900 mb-6">Form Builder</h1>
 
       <div class="space-y-4 mb-6">
@@ -68,7 +68,7 @@ function FormSchemaBuilderWorkspace() {
             value={formName()}
             onInput={e => setFormName(e.currentTarget.value)}
             placeholder="Enter form name..."
-            class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            class="w-full border text-slate-700 placeholder:text-slate-500 border-slate-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
 
@@ -81,7 +81,7 @@ function FormSchemaBuilderWorkspace() {
             type="datetime-local"
             value={expiryDate() ?? ''}
             onInput={e => setExpiryDate(e.currentTarget.value || null)}
-            class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            class="w-full text-slate-700 border border-slate-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
           <p class="text-xs text-slate-500 mt-1">
             Form will stop accepting submissions after this time. Leave empty for no expiry.
@@ -114,7 +114,7 @@ function FormSchemaBuilderWorkspace() {
               <button
                 type="button"
                 onClick={() => injectQuestionTrack(type as QuestionType)}
-                class="px-3 py-1.5 text-xs font-medium bg-slate-100 text-slate-700 rounded hover:bg-slate-200"
+                class="px-3 py-1.5 text-xs font-medium bg-slate-100 text-slate-700 rounded hover:bg-slate-200 hover:cursor-pointer"
               >
                 Add {type.replace('_', ' ')}
               </button>
@@ -179,7 +179,7 @@ function FormSchemaBuilderWorkspace() {
                     <button
                       type="button"
                       onClick={() => purgeQuestionTrack(field.id)}
-                      class="text-rose-600 hover:text-rose-800 text-xs"
+                      class="text-rose-600 hover:text-rose-800 text-xs hover:cursor-pointer"
                     >
                       Delete
                     </button>
@@ -196,7 +196,7 @@ function FormSchemaBuilderWorkspace() {
           type="button"
           onClick={compileAndCommitSchema}
           disabled={!formName() || fields().length === 0}
-          class="px-4 py-2 bg-indigo-600 text-white rounded text-sm font-medium hover:bg-indigo-700 disabled:opacity-50"
+          class="px-4 py-2 bg-indigo-600 text-white rounded text-sm font-medium hover:bg-indigo-700 hover::opacity-70 disabled:opacity-60 hover:cursor-pointer"
         >
           Save Form Schema
         </button>

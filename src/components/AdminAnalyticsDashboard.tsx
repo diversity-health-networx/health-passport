@@ -136,7 +136,7 @@ export function AdminAnalyticsDashboard(props: AdminAnalyticsDashboardProps) {
             type="datetime-local"
             value={expiryDate()}
             onInput={e => setExpiryDate(e.currentTarget.value)}
-            class="border border-slate-300 rounded px-2 py-1 text-sm"
+            class="border border-slate-300 rounded px-2 py-1 text-sm admin-expiry focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
           <button
             onClick={saveExpirySetting}
