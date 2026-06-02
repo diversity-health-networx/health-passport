@@ -11,6 +11,11 @@
       "database_id": "b4cb2dff-a2b7-40a9-b684-c6868af98f90"
     }
   ],
+  "vars": {
+    "POSTMARK_SERVER_TOKEN": "",
+    "MAGIC_LINK_EMAIL": "",
+    "VITE_POSTHOG_KEY": ""
+  },
   "observability": {
     "logs": {
       "enabled": true,
