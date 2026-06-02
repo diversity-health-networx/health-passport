@@ -11,4 +11,10 @@
       "database_id": "b4cb2dff-a2b7-40a9-b684-c6868af98f90"
     }
   ],
+  "observability": {
+    "logs": {
+      "enabled": false,
+      "invocation_logs": true
+    }
+  },
 }
