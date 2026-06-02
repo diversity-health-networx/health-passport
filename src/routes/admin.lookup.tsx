@@ -25,7 +25,7 @@ function UserSubmissionCrossLookup() {
   return (
     <div class="max-w-6xl mx-auto p-8">
       <div class="mb-8">
-        <h1 class="text-2xl font-bold text-slate-900">User History Lookup Portal</h1>
+        <h1 class="text-2xl font-bold text-blue-600">User History Lookup Portal</h1>
         <p class="text-sm text-slate-500">Cross-reference and trace all form records bound to a user ID.</p>
       </div>
 

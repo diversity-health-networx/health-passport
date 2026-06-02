@@ -37,7 +37,7 @@ function AdminLogin() {
   }
 
   return (
-    <div class="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+    <div class="min-h-screen flex items-center justify-center p-4">
       <div class="bg-white border border-slate-200 rounded-lg shadow-sm p-8 max-w-md w-full">
         <h1 class="text-2xl font-bold text-slate-900 mb-2">Admin Login</h1>
         <p class="text-sm text-slate-500 mb-6">Enter your @dhnrx.com email to receive a magic link</p>

@@ -26,7 +26,7 @@ function AdminFormsDashboard() {
   return (
     <div class={styles.container}>
       <div class={styles.header}>
-        <h1 class={styles.title}>Admin Control Matrix: Global Forms</h1>
+        <h1 class={styles.title}>Manage Forms</h1>
         <a href="/admin/create" class={`${styles.btn} ${styles.createBtn}`}>
           Create Form Schema
         </a>
