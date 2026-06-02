@@ -80,9 +80,7 @@ function RootDocument({ children }: { children: Solid.JSX.Element }) {
     }
   })
 
-  async function logout(e: MouseEvent) {
-    e.preventDefault()
-
+  async function logout() {
     const res = await fetch('/api/admin/logout', {
       method: 'POST',
       credentials: 'include',
@@ -95,10 +93,10 @@ function RootDocument({ children }: { children: Solid.JSX.Element }) {
 
     // Clear auth state
     setAuthState({})
-
     navigate({ to: '/admin/login', search: { auth: undefined } })
   }
 
+  //cast auth state to boolean
   const isAdmin = () => !!getAuth().user
 
   return (
@@ -110,16 +108,14 @@ function RootDocument({ children }: { children: Solid.JSX.Element }) {
         <HeadContent />
         <div class="p-2 flex gap-4 text-sm mx-2">
           <Link to="/" activeProps={{ class: 'font-bold' }} activeOptions={{ exact: true }}>Home</Link>
-          <Link to="/admin/lookup" activeProps={{ class: 'font-bold' }}>search</Link>
-          <Show when={!isAdmin()} fallback={
-            <>
-              <Link to="/admin/forms" class='ml-auto' activeProps={{ class: 'font-bold' }}>forms</Link>
-              <Link to="/admin/lookup" class='ml-auto' activeProps={{ class: 'font-bold' }}>search</Link>
-              <Link to="/admin/create" class='ml-auto' activeProps={{ class: 'font-bold' }}>create</Link>
-              <Link to="/admin/settings" class='ml-auto' activeProps={{ class: 'font-bold' }}>settings</Link>
-            </>
+          <Show when={isAdmin()} fallback={
+            <Link to="/admin/login" class='ml-auto' activeProps={{ class: 'font-bold' }} search={{ auth: undefined }}>login</Link>
           }>
-            <Link to="/admin/login" class='ml-auto' activeProps={{ class: 'font-bold' }} search={{auth: undefined}}>login</Link>
+            <Link to="/admin/forms" class='ml-auto' activeProps={{ class: 'font-bold' }}>forms</Link>
+            <Link to="/admin/lookup" activeProps={{ class: 'font-bold' }}>search</Link>
+            <Link to="/admin/create" activeProps={{ class: 'font-bold' }}>create</Link>
+            <Link to="/admin/settings" activeProps={{ class: 'font-bold' }}>settings</Link>
+            <button class="cursor-pointer" onclick={logout}>logout</button>
           </Show>
         </div>
         <hr />
