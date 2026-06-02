@@ -37,10 +37,7 @@ export const Route = createRootRoute({
       { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' },
       { rel: 'manifest', href: '/site.webmanifest', color: '#fffff' },
       { rel: 'icon', href: '/favicon.ico' },
-    ],
-    scripts: [
-      { src: '/customScript.js', type: 'text/javascript' },
-    ],
+    ]
   }),
   errorComponent: DefaultCatchBoundary,
   notFoundComponent: () => <NotFound />,
