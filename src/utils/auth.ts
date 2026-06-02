@@ -28,6 +28,7 @@ export async function verifyAdminAuthToken(token: string, appSecret: string): Pr
 }
 
 export async function dispatchMagicLinkEmail(
+  from: string | undefined,
   email: string,
   targetUrl: string,
   postmarkKey: string
@@ -41,7 +42,7 @@ export async function dispatchMagicLinkEmail(
       'X-Postmark-Server-Token': postmarkKey,
     },
     body: JSON.stringify({
-      From: 'security@dhnrx.com',
+      From: from || 'security@dhnrx.com',
       To: email,
       Subject: 'Health Passport Access Authorization Key',
       HtmlBody: `<p>Click below to authorize your device session. This secure validation token is valid for 15 minutes.</p><a href="${targetUrl}"><strong>Authorize Access</strong></a>`,

@@ -75,7 +75,7 @@ export const Route = createFileRoute('/api/admin/login')({
             // Note: This uses the current url and adds the authenticated query param
             const targetUrl = `${url.origin}/admin/login?auth=${token}`
 
-            await dispatchMagicLinkEmail(body.email, targetUrl, postmarkKey)
+            await dispatchMagicLinkEmail(env.MAGIC_LINK_EMAIL, body.email, targetUrl, postmarkKey)
 
             return Response.json({ 
               success: true, 
