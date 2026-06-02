@@ -7,7 +7,6 @@ interface __BaseEnv_Env {
 	CLOUDFLARE_D1_DATABASE_ID: string;
 	POSTMARK_SERVER_TOKEN: string;
 	MAGIC_LINK_SECRET: string;
-	SERVER_URL: string;
 	VITE_POSTHOG_KEY: string;
 }
 declare namespace Cloudflare {
