@@ -69,17 +69,11 @@ function RootDocument({ children }: { children: Solid.JSX.Element }) {
         <HeadContent />
         <div class="p-2 flex gap-2 text-lg">
           <Link to="/" activeProps={{ class: 'font-bold' }} activeOptions={{ exact: true }}>Home</Link>{' '}
-          <Link to="/posts" activeProps={{ class: 'font-bold' }}>Posts</Link>{' '}
-          <Link to="/users" activeProps={{ class: 'font-bold' }}>Users</Link>{' '}
-          <Link to="/route-a" activeProps={{ class: 'font-bold' }}>Pathless Layout</Link>{' '}
-          <Link to="/deferred" activeProps={{ class: 'font-bold' }}>Deferred</Link>{' '}
-          <Link
-            // @ts-expect-error
-            to="/this-route-does-not-exist"
-            activeProps={{ class: 'font-bold' }}
-          >
-            This Route Does Not Exist
-          </Link>
+          <Link to="/admin/forms" activeProps={{ class: 'font-bold' }}>forms</Link>{' '}
+          <Link to="/admin/lookup" activeProps={{ class: 'font-bold' }}>search</Link>{' '}
+          <Link to="/admin/create" activeProps={{ class: 'font-bold' }}>create</Link>{' '}
+          <Link to="/admin/settings" activeProps={{ class: 'font-bold' }}>settings</Link>{' '}
+          <Link to="/admin/login" activeProps={{ class: 'font-bold' }}>login</Link>{' '}
         </div>
         <hr />
         {children}
