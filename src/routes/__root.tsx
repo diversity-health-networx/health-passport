@@ -9,12 +9,25 @@ import {
 import { TanStackRouterDevtools } from '@tanstack/solid-router-devtools'
 import { HydrationScript } from 'solid-js/web'
 import type * as Solid from 'solid-js'
+import { Show, createContext, useContext } from 'solid-js'
 import { DefaultCatchBoundary } from '~/components/DefaultCatchBoundary'
 import { NotFound } from '~/components/NotFound'
 import appCss from '~/styles/app.css?url'
 import { seo } from '~/utils/seo'
 import { SolidQueryDevtools } from '@tanstack/solid-query-devtools'
 import { QueryClient, QueryClientProvider } from '@tanstack/solid-query'
+
+interface globalContext {
+  auth: {
+    user?: string;
+    key?: CryptoKey;
+    nonce?: string;
+  };
+}
+
+export const globals: globalContext = { auth: {} };
+
+const Context = createContext(globals);
 
 export const Route = createRootRoute({
   head: () => ({
@@ -51,15 +64,20 @@ function RootLayout() {
   const queryClient = new QueryClient()
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Outlet />
-      {/* Move the query devtools inside the provider so they can see the client too */}
-      <SolidQueryDevtools buttonPosition="bottom-left" />
-    </QueryClientProvider>
+    <Context.Provider value={Context.defaultValue}>
+      <QueryClientProvider client={queryClient}>
+        <Outlet />
+        {/* Move the query devtools inside the provider so they can see the client too */}
+        <SolidQueryDevtools buttonPosition="bottom-left" />
+      </QueryClientProvider>
+    </Context.Provider>
   )
 }
 
 function RootDocument({ children }: { children: Solid.JSX.Element }) {
+
+  const globalContext = useContext(Context);
+
   return (
     <html>
       <head>
@@ -69,11 +87,17 @@ function RootDocument({ children }: { children: Solid.JSX.Element }) {
         <HeadContent />
         <div class="p-2 flex gap-4 text-sm mx-2">
           <Link to="/" activeProps={{ class: 'font-bold' }} activeOptions={{ exact: true }}>Home</Link>{' '}
-          <Link to="/admin/forms" class='ml-auto' activeProps={{ class: 'font-bold' }}>forms</Link>{' '}
           <Link to="/admin/lookup" activeProps={{ class: 'font-bold' }}>search</Link>{' '}
-          <Link to="/admin/create" activeProps={{ class: 'font-bold' }}>create</Link>{' '}
-          <Link to="/admin/settings" activeProps={{ class: 'font-bold' }}>settings</Link>{' '}
-          <Link to="/admin/login" activeProps={{ class: 'font-bold' }}>login</Link>{' '}
+          <Show when={!globalContext.auth.user} fallback={
+            <>
+              <Link to="/admin/forms" class='ml-auto' activeProps={{ class: 'font-bold' }}>forms</Link>{' '}
+              <Link to="/admin/lookup" activeProps={{ class: 'font-bold' }}>search</Link>{' '}
+              <Link to="/admin/create" activeProps={{ class: 'font-bold' }}>create</Link>{' '}
+              <Link to="/admin/settings" activeProps={{ class: 'font-bold' }}>settings</Link>{' '}
+            </>
+          }>
+            <Link to="/admin/login" class='ml-auto' activeProps={{ class: 'font-bold' }}>login</Link>{' '}
+          </Show>
         </div>
         <hr />
         {children}
