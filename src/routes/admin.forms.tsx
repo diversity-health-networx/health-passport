@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/solid-router'
-import { For } from 'solid-js'
+import { For, Show } from 'solid-js'
 import { createQuery } from '@tanstack/solid-query'
 import styles from './AdminForms.module.css'
 
@@ -43,27 +43,40 @@ function AdminFormsDashboard() {
             </tr>
           </thead>
           <tbody class={styles.tbody}>
-            <For each={formsQuery.data} fallback={<tr><td colspan="4" class={styles.emptyState}>No active system forms established.</td></tr>}>
-              {form => (
-                <tr class={styles.tr}>
-                  <td class={styles.td}>{form.name}</td>
-                  <td class={styles.td}>{form.id}</td>
-                  <td class={styles.td}>
-                    <span class={styles.chip}>{form.user_id_format}</span>
-                  </td>
-                  <td class={styles.td}>
-                    <div class={styles.actions}>
-                      <a href={`/form?id=${form.id}&view=admin`} class={styles.actionLink}>
-                        Dashboard
-                      </a>
-                      <button onClick={() => executeFormDeletion(form.id)} class={styles.deleteAction}>
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              )}
-            </For>
+            <Show when={formsQuery.isLoading} fallback={
+              <For each={formsQuery.data} fallback={<tr><td colspan="4" class={styles.emptyState}>No active system forms established.</td></tr>}>
+                {form => (
+                  <tr class={styles.tr}>
+                    <td class={styles.td}>{form.name}</td>
+                    <td class={styles.td}>{form.id}</td>
+                    <td class={styles.td}>
+                      <span class={styles.chip}>{form.user_id_format}</span>
+                    </td>
+                    <td class={styles.td}>
+                      <div class={styles.actions}>
+                        <a href={`/form?id=${form.id}&view=admin`} class={styles.actionLink}>
+                          Dashboard
+                        </a>
+                        <button onClick={() => executeFormDeletion(form.id)} class={styles.deleteAction}>
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </For>
+            }>
+              <For each={Array(4)}>
+                {() => (
+                  <tr class={styles.skeletonRow}>
+                    <td class={styles.skeletonCell}><div class={`${styles.skeletonBlock} ${styles.skeletonBlockMedium}`} /></td>
+                    <td class={styles.skeletonCell}><div class={`${styles.skeletonBlock} ${styles.skeletonBlockLong}`} /></td>
+                    <td class={styles.skeletonCell}><div class={`${styles.skeletonBlock} ${styles.skeletonBlockShort}`} /></td>
+                    <td class={styles.skeletonCell}><div class={`${styles.skeletonBlock} ${styles.skeletonBlockMedium}`} /></td>
+                  </tr>
+                )}
+              </For>
+            </Show>
           </tbody>
         </table>
       </div>
