@@ -13,6 +13,7 @@ export const Route = createFileRoute('/admin/create')({
 })
 
 function FormSchemaBuilderWorkspace() {
+  const navigate = Route.useNavigate()
   const [fields, setFields] = createSignal<any[]>([])
   const [formName, setFormName] = createSignal('')
   const [allowOverwrite, setAllowOverwrite] = createSignal(false)
@@ -56,7 +57,10 @@ function FormSchemaBuilderWorkspace() {
       body: JSON.stringify(structuredPayload),
     })
 
-    if (submitCall.ok) alert('Form schema safely initialized across active environments.')
+    if (submitCall.ok) {
+      alert('Form saved')
+      navigate({ to: '/admin/forms' })
+    }
   }
 
   return (
