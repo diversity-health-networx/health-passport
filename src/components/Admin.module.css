@@ -150,19 +150,9 @@
 }
 
 .grid {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 2rem;
-}
-
-@media (min-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.gridCols2 {
-  grid-column: span 2 / span 2;
 }
 
 .tableContainer {
@@ -269,14 +259,29 @@
 }
 
 .panelPlaceholder {
-  font-size: 0.75rem;
-  color: #3c434d;
+  font-size: 0.875rem;
+  color: #64748b;
   text-align: center;
-  padding: 3rem 0;
+  padding: 4rem 1.5rem;
 }
 
-.panelField {
-  margin-bottom: 1.25rem;
+.response {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.response > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.emptyState {
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.875rem;
 }
 
 .fieldLabel {
@@ -395,7 +400,7 @@
 }
 
 /* Admin Create Styles - Enhanced */
-.createContainer {
+.adminCreate {
   max-width: 48rem;
   margin: 0 auto;
   padding: 2rem 1.5rem;
@@ -477,4 +482,11 @@
 .deleteFieldButton:hover {
   background: #fef2f2;
   color: #b91c1c;
+}
+
+/* Admin Forms styles */
+.adminFormsContainer {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
 }
