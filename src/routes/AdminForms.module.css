@@ -80,6 +80,10 @@
   color: #334155;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  
+  &:last-child {
+    text-align: center;
+  }
 }
 
 .tbody {
@@ -96,6 +100,7 @@
 
 .td {
   padding: 1rem;
+  color: #000;
 }
 
 .formName {
