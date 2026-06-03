@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from '@tanstack/solid-router'
-import { createSignal, Show, onMount } from 'solid-js'
+import { createSignal, Show, onMount, Switch, Match } from 'solid-js'
 import { ErrorModal } from '~/components/ErrorModal'
 import { setAuthState } from '~/utils/authStore'
 import type { AuthClientInfo } from '~/types/auth'
@@ -109,65 +109,71 @@ function AdminLogin() {
   }
 
   // Render a loading state during both session check and magic link verification
-  if (status() === 'verifying') {
-    return (
-      <div class="min-h-screen flex items-center justify-center p-4">
-        <div class="text-center">
-          <h2 class="text-xl font-semibold text-slate-900 mb-2">Authenticating...</h2>
-          <p class="text-slate-500">Please wait while we verify your session.</p>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div class="min-h-screen flex items-center justify-center p-4">
-      <div class="bg-white border border-slate-200 rounded-lg shadow-sm p-8 max-w-md w-full">
-        <h1 class="text-2xl font-bold text-slate-900 mb-2">Admin Login</h1>
-        <p class="text-sm text-slate-500 mb-6">Enter your @dhnrx.com email to receive a magic link</p>
+    <Switch>
+      {/* Condition 1: Verifying Session or Token */}
+      <Match when={status() === 'verifying'}>
+        <div class="min-h-screen flex items-center justify-center p-4">
+          <div class="text-center">
+            <h2 class="text-xl font-semibold text-slate-900 mb-2">Authenticating...</h2>
+            <p class="text-slate-500">Please wait while we verify your session.</p>
+          </div>
+        </div>
+      </Match>
 
-        <form onSubmit={handleSubmit} class="space-y-4">
-          <div>
-            <label for="email" class="block text-sm font-medium text-slate-700 mb-1">
-              Email Address
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email()}
-              onInput={e => setEmail(e.currentTarget.value)}
-              placeholder="you@dhnrx.com"
-              required
-              class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
+      {/* Default Fallback: Render standard Login Interface */}
+      <Match when={true}>
+        <div class="min-h-screen flex items-center justify-center p-4">
+          <div class="bg-white border border-slate-200 rounded-lg shadow-sm p-8 max-w-md w-full">
+            <h1 class="text-2xl font-bold text-slate-900 mb-2">Admin Login</h1>
+            <p class="text-sm text-slate-500 mb-6">Enter your @dhnrx.com email to receive a magic link</p>
+
+            <form onSubmit={handleSubmit} class="space-y-4">
+              <div>
+                <label for="email" class="block text-sm font-medium text-slate-700 mb-1">
+                  Email Address
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  value={email()}
+                  onInput={e => setEmail(e.currentTarget.value)}
+                  placeholder="you@dhnrx.com"
+                  required
+                  class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+
+              {/* Internal feedback text elements also converted to Match statements */}
+              <Switch>
+                <Match when={status() === 'error'}>
+                  <p class="text-sm text-rose-600" role="alert">
+                    {error()}
+                  </p>
+                </Match>
+                <Match when={status() === 'success'}>
+                  <p class="text-sm text-emerald-600">Magic link sent! Check your email.</p>
+                </Match>
+              </Switch>
+
+              <button
+                type="submit"
+                disabled={status() === 'sending' || status() === 'success'}
+                class="w-full bg-indigo-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-indigo-700 disabled:opacity-50"
+              >
+                {status() === 'sending' ? 'Sending...' : 'Send Magic Link'}
+              </button>
+            </form>
           </div>
 
-          <Show when={status() === 'error'}>
-            <p class="text-sm text-rose-600" role="alert">
-              {error()}
-            </p>
-          </Show>
-
-          <Show when={status() === 'success'}>
-            <p class="text-sm text-emerald-600">Magic link sent! Check your email.</p>
-          </Show>
-
-          <button
-            type="submit"
-            disabled={status() === 'sending' || status() === 'success'}
-            class="w-full bg-indigo-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-indigo-700 disabled:opacity-50"
-          >
-            {status() === 'sending' ? 'Sending...' : 'Send Magic Link'}
-          </button>
-        </form>
-      </div>
-
-      <ErrorModal
-        isOpen={isErrorModalOpen()}
-        title="Login Failed"
-        message={modalErrorMessage()}
-        onClose={() => setIsErrorModalOpen(false)}
-      />
-    </div>
+          <ErrorModal
+            isOpen={isErrorModalOpen()}
+            title="Login Failed"
+            message={modalErrorMessage()}
+            onClose={() => setIsErrorModalOpen(false)}
+          />
+        </div>
+      </Match>
+    </Switch>
   )
 }
