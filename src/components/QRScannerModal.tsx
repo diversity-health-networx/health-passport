@@ -1,4 +1,4 @@
-import { createSignal, onMount, onCleanup, Show, createEffect } from 'solid-js'
+import { createSignal, onMount, onCleanup, Show, createEffect, Switch, Match } from 'solid-js'
 import { Html5Qrcode } from 'html5-qrcode'
 
 interface QRScannerModalProps {
@@ -15,7 +15,7 @@ export function QRScannerModal(props: QRScannerModalProps) {
   const [fileError, setFileError] = createSignal('')
   const [isScanning, setIsScanning] = createSignal(false)
   
-  let html5QrCode: Html5Qrcode | undefined
+  let html5QrCodeInstance: Html5Qrcode | undefined
   let modalRef: HTMLDivElement | undefined
   const scannerContainerId = `qr-scanner-${props.fieldName}`
 
@@ -23,6 +23,7 @@ export function QRScannerModal(props: QRScannerModalProps) {
     modalRef = el
   }
 
+  // Check if camera devices are connected and available to the client browser
   const checkCameraAvailability = async () => {
     try {
       const devices = await navigator.mediaDevices.enumerateDevices()
@@ -33,261 +34,263 @@ export function QRScannerModal(props: QRScannerModalProps) {
     }
   }
 
-  const startCameraScanner = async () => {
-    if (!html5QrCode) return
-
-    try {
-      setIsScanning(true)
-      setScanError('')
-      
-      await html5QrCode.start(
-        { facingMode: 'environment' },
-        {
-          fps: 10,
-          qrbox: { width: 250, height: 250 },
-        },
-        (decodedText) => {
-          props.onScan(decodedText)
-          props.onClose()
-          stopScanner()
-        },
-        (errorMessage) => {
-          // Scanning errors are frequent during continuous scanning, don't show them
-          console.debug('QR scan error:', errorMessage)
-        }
-      )
-    } catch (err) {
-      setScanError(err instanceof Error ? err.message : 'Failed to start camera scanner')
-      setIsScanning(false)
-    }
-  }
-
+  // Safely stops any ongoing camera streams and releases the hardware
   const stopScanner = async () => {
-    if (html5QrCode && isScanning()) {
-      try {
-        await html5QrCode.stop()
-        await html5QrCode.clear()
-      } catch {
-        // Scanner may already be stopped
+    try {
+      if (html5QrCodeInstance && html5QrCodeInstance.isScanning) {
+        await html5QrCodeInstance.stop()
+        html5QrCodeInstance.clear()
       }
+    } catch (err) {
+      console.error("Failed to stop scanner cleanly:", err)
+    } finally {
       setIsScanning(false)
     }
   }
 
-  const handleFileUpload = async (file: File) => {
-    if (!html5QrCode) return
+  // Initializes the camera scanner with a tiny delay to allow the DOM to mount
+  const startCameraScanner = () => {
+    // 50ms delay guarantees SolidJS has finished compiling the conditional blocks
+    setTimeout(async () => {
+      const container = document.getElementById(scannerContainerId)
+      if (!container) {
+        setScanError('Scanner preview container not ready in DOM.')
+        return
+      }
+
+      try {
+        if (!html5QrCodeInstance) {
+          html5QrCodeInstance = new Html5Qrcode(scannerContainerId)
+        }
+
+        // Avoid double initialization
+        if (html5QrCodeInstance.isScanning) return 
+
+        setIsScanning(true)
+        setScanError('')
+
+        await html5QrCodeInstance.start(
+          { facingMode: 'environment' }, // Prefer rear camera on mobile devices
+          { 
+            fps: 10, 
+            qrbox: { width: 250, height: 250 } 
+          },
+          (decodedText: string) => {
+            // Success Callback
+            props.onScan(decodedText)
+            stopScanner()
+            props.onClose()
+          },
+          () => {
+            // html5-qrcode produces warnings on every frame without a QR code.
+            // We ignore these safely to avoid flooding console logs.
+          }
+        )
+      } catch (err) {
+        console.error("Camera access failure:", err)
+        setScanError('Failed to capture camera feedback. Please inspect system permission settings.')
+        setIsScanning(false)
+      }
+    }, 50)
+  }
+
+  // Handles manual file image upload for scanning static QR codes
+  const handleFileChange = async (e: Event) => {
+    const target = e.target as HTMLInputElement
+    const file = target.files?.[0]
+    if (!file) return
 
     setFileError('')
     
+    // Stop active camera scanner before uploading a file
+    await stopScanner()
+
     try {
-      const result = await html5QrCode.scanFile(file, true)
-      props.onScan(result)
+      const temporaryScanner = new Html5Qrcode(scannerContainerId)
+      const decodedText = await temporaryScanner.scanFile(file, true)
+      props.onScan(decodedText)
       props.onClose()
     } catch (err) {
-      setFileError(err instanceof Error ? err.message : 'Failed to decode QR code from image')
+      console.error("File QR parsing failure:", err)
+      setFileError('Unable to identify any valid QR code in this image.')
     }
   }
 
-  // Focus trap for accessibility
-  const trapFocus = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      props.onClose()
-      return
-    }
-
-    if (e.key !== 'Tab' || !modalRef) return
-
-    const focusableElements = modalRef.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    )
-    const firstElement = focusableElements[0]
-    const lastElement = focusableElements[focusableElements.length - 1]
-
-    if (e.shiftKey && document.activeElement === firstElement) {
-      e.preventDefault()
-      lastElement?.focus()
-    } else if (!e.shiftKey && document.activeElement === lastElement) {
-      e.preventDefault()
-      firstElement?.focus()
-    }
-  }
-
+  // Check hardware on mount
   onMount(() => {
-    if (props.isOpen) {
-      checkCameraAvailability()
-      html5QrCode = new Html5Qrcode(scannerContainerId)
-    }
+    checkCameraAvailability()
   })
 
-  // Handle modal open/close lifecycle
+  // Watch modal status and camera configurations
   createEffect(() => {
-    if (props.isOpen) {
-      setScanMode(cameraAvailable() ? 'camera' : 'upload')
-      if (cameraAvailable()) {
-        startCameraScanner()
-      }
-      // Store previously focused element
-      const previouslyFocused = document.activeElement as HTMLElement
-      onCleanup(() => {
-        stopScanner()
-        previouslyFocused?.focus()
-      })
+    if (props.isOpen && scanMode() === 'camera' && cameraAvailable()) {
+      startCameraScanner()
     } else {
       stopScanner()
     }
   })
 
+  // Clean up any remaining hardware camera hooks to prevent memory leaks
   onCleanup(() => {
     stopScanner()
   })
 
-  const handleFileInputChange = (e: Event) => {
-    const target = e.target as HTMLInputElement
-    const file = target.files?.[0]
-    if (file) {
-      handleFileUpload(file)
-    }
-  }
-
   return (
     <Show when={props.isOpen}>
       <div 
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+        ref={setModalRef}
+        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in"
         role="dialog"
         aria-modal="true"
         aria-labelledby="qr-modal-title"
-        onKeyDown={trapFocus}
-        style={{ animation: "modalFadeIn 200ms ease-out" }}
       >
-        <div 
-          ref={setModalRef} 
-          class="bg-white rounded-2xl shadow-xl max-w-md w-full mx-4 p-6 sm:p-8" 
-          tabindex={-1}
-          style={{ 
-            animation: "modalSlideIn 250ms cubic-bezier(0.34, 1.56, 0.64, 1)",
-            'transform-origin': "center"
-          }}
-        >
-          <div class="flex items-center gap-3 mb-1">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-600">
-              <rect x="3" y="3" width="7" height="7" />
-              <rect x="14" y="3" width="7" height="7" />
-              <rect x="3" y="14" width="7" height="7" />
-              <rect x="14" y="14" width="7" height="7" />
-            </svg>
-            <h2 id="qr-modal-title" class="text-xl font-semibold text-slate-900">
-              Scan QR Code
-            </h2>
+        {/* Style injection to target and completely strip the runtime-generated feedback panels blocking the layout */}
+        <style>
+          {`
+            #${scannerContainerId} {
+              position: relative !important;
+            }
+            /* Hide the built-in, unstyled control panels, headers and status spans dynamically injected by html5-qrcode */
+            #${scannerContainerId} > div:not(:first-child),
+            #${scannerContainerId} > span,
+            #${scannerContainerId}__header_message,
+            #${scannerContainerId}__status_span,
+            #${scannerContainerId}__dashboard {
+              display: none !important;
+              opacity: 0 !important;
+              height: 0 !important;
+              pointer-events: none !important;
+              visibility: hidden !important;
+            }
+            #${scannerContainerId} video {
+              width: 100% !important;
+              height: 100% !important;
+              object-fit: cover !important;
+              border-radius: 0.5rem !important;
+            }
+          `}
+        </style>
+
+        <div class="bg-white rounded-xl shadow-xl border border-slate-200 max-w-md w-full overflow-hidden flex flex-col max-h-[90vh]">
+          {/* Header */}
+          <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+            <h3 id="qr-modal-title" class="text-lg font-bold text-slate-900">
+              QR Code Reader
+            </h3>
+            <button 
+              onClick={props.onClose} 
+              class="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-full hover:bg-slate-200/50 cursor-pointer"
+              aria-label="Close modal"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
           </div>
-          <p class="text-sm text-slate-600 mb-6">Position the QR code within the scanner frame or upload an image containing a QR code.</p>
-          
-          <Show when={cameraAvailable() || scanMode() === 'upload'}>
-            <div class="flex gap-2 mb-6">
-              <Show when={cameraAvailable()}>
-                <button
-                  type="button"
-                  onClick={() => setScanMode('camera')}
-                  class={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-150 ${
-                    scanMode() === 'camera' 
-                      ? 'bg-indigo-600 text-white shadow-md' 
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                  }`}
-                  style={{ "min-height": "44px", "min-width": "44px" }}
-                >
-                  <span class="flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-                      <polyline points="14 2 14 8 20 8" />
-                    </svg>
-                    Camera Scan
-                  </span>
-                </button>
-              </Show>
+
+          {/* Mode Switcher */}
+          <Show when={cameraAvailable()}>
+            <div class="flex border-b border-slate-100 p-2 gap-1 bg-slate-50/50">
               <button
-                type="button"
-                onClick={() => setScanMode('upload')}
-                class={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-150 ${
-                  scanMode() === 'upload' 
-                    ? 'bg-indigo-600 text-white shadow-md' 
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                class={`flex-1 py-2 px-3 text-sm font-medium rounded-md transition-all cursor-pointer ${
+                  scanMode() === 'camera' 
+                    ? 'bg-white text-indigo-600 shadow-sm border border-slate-200/60' 
+                    : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
                 }`}
-                style={{ "min-height": "44px", "min-width": "44px" }}
+                onClick={() => setScanMode('camera')}
               >
-                <span class="flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                    <circle cx="9" cy="9" r="2" />
-                    <path d="M21 15l-3.086-3.086a2 2 0 0 0-1.414-.586H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2z" />
-                  </svg>
-                  Upload Image
-                </span>
+                Use Camera Viewport
+              </button>
+              <button
+                class={`flex-1 py-2 px-3 text-sm font-medium rounded-md transition-all cursor-pointer ${
+                  scanMode() === 'upload' 
+                    ? 'bg-white text-indigo-600 shadow-sm border border-slate-200/60' 
+                    : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
+                }`}
+                onClick={() => setScanMode('upload')}
+              >
+                Upload Photo File
               </button>
             </div>
           </Show>
 
-          <Show when={scanMode() === 'camera' && cameraAvailable()}>
-            <div class="relative bg-slate-900 rounded-xl overflow-hidden mb-4">
-              <div id={scannerContainerId} class="w-full min-h-[250px]" />
-              <Show when={scanError()}>
-                <div class="absolute bottom-0 left-0 right-0 bg-red-500/90 text-white p-3 text-sm">
-                  {scanError()}
+          {/* Main Display Body */}
+          <div class="p-6 flex-1 overflow-y-auto flex flex-col justify-center items-center min-h-[320px]">
+            <Switch>
+              {/* Camera Viewport Handler */}
+              <Match when={scanMode() === 'camera' && cameraAvailable()}>
+                <div class="w-full max-w-[280px] aspect-square relative rounded-lg overflow-hidden border-2 border-slate-200 bg-slate-950">
+                  {/* Scanner element */}
+                  <div id={scannerContainerId} class="w-full h-full object-cover"></div>
+                  
+                  {/* Loading overlay */}
+                  <Show when={!isScanning() && !scanError()}>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/80 text-white p-4 text-center">
+                      <div class="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-3"></div>
+                      <p class="text-sm">Configuring device lens feeds...</p>
+                    </div>
+                  </Show>
+
+                  {/* Frame overlays during active scan */}
+                  <Show when={isScanning()}>
+                    <div class="absolute inset-0 pointer-events-none border-[16px] border-slate-950/30">
+                      <div class="w-full h-full border-2 border-dashed border-indigo-400 animate-pulse"></div>
+                    </div>
+                  </Show>
                 </div>
-              </Show>
-              <Show when={isScanning()}>
-                <div class="absolute top-0 left-0 right-0 bg-indigo-600/90 text-white p-2 text-xs text-center">
-                  Point your camera at a QR code...
+                
+                <Show when={scanError()}>
+                  <p class="text-red-600 text-sm mt-3 text-center" role="alert">
+                    {scanError()}
+                  </p>
+                </Show>
+              </Match>
+
+              {/* Upload Static Photo Handler */}
+              <Match when={scanMode() === 'upload' || !cameraAvailable()}>
+                <div class="w-full flex flex-col items-center">
+                  <label 
+                    for="qr-image-input" 
+                    class="w-full max-w-[280px] aspect-square border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center p-4 bg-slate-50 hover:bg-slate-100/50 cursor-pointer transition-colors"
+                  >
+                    <svg class="mx-auto h-12 w-12 text-slate-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                      <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <span class="mt-2 block text-sm font-medium text-slate-900 text-center">
+                      Select QR Code Image File
+                    </span>
+                    <span class="mt-1 block text-xs text-slate-500">
+                      PNG, JPG, or WebP up to 10MB
+                    </span>
+                  </label>
+                  
+                  <input 
+                    id="qr-image-input"
+                    type="file" 
+                    accept="image/*" 
+                    class="hidden" 
+                    onChange={handleFileChange}
+                  />
+
+                  {/* Hidden scanner container for file processing fallback requirements */}
+                  <div id={scannerContainerId} class="hidden"></div>
+
+                  <Show when={fileError()}>
+                    <p class="text-rose-600 text-sm mt-3 text-center" role="alert">
+                      {fileError()}
+                    </p>
+                  </Show>
                 </div>
-              </Show>
-            </div>
-          </Show>
+              </Match>
+            </Switch>
+          </div>
 
-          <Show when={scanMode() === 'upload'}>
-            <div class="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center transition-all duration-200 hover:border-indigo-400 hover:bg-slate-50 mb-4">
-              <input
-                type="file"
-                accept="image/*"
-                capture="environment"
-                onChange={handleFileInputChange}
-                class="hidden"
-                id={`qr-upload-${props.fieldName}`}
-              />
-              <label
-                for={`qr-upload-${props.fieldName}`}
-                class="cursor-pointer inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-lg font-medium hover:from-indigo-700 hover:to-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-200 shadow-md hover:shadow-lg"
-                style={{ "min-height": "44px", "min-width": "44px" }}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                  <circle cx="9" cy="9" r="2" />
-                  <path d="M21 15l-3.086-3.086a2 2 0 0 0-1.414-.586H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2z" />
-                </svg>
-                Choose Image
-              </label>
-              <p class="text-xs text-slate-600 mt-3">Supported formats: JPEG, PNG, WebP, GIF</p>
-              <Show when={fileError()}>
-                <p class="text-red-600 text-sm mt-3">{fileError()}</p>
-              </Show>
-            </div>
-          </Show>
-
-          <Show when={!cameraAvailable()}>
-            <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
-              <p class="text-amber-700 text-sm flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="12" y1="16" x2="12" y2="12" />
-                  <line x1="12" y1="8" x2="12.01" y2="8" />
-                </svg>
-                Camera not available. Using image upload mode.
-              </p>
-            </div>
-          </Show>
-
-          <div class="flex justify-end pt-2 border-t border-slate-200">
-            <button
-              onClick={props.onClose}
-              class="px-5 py-2.5 bg-slate-100 text-slate-700 rounded-lg font-medium hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-600 transition-all duration-200"
-              style={{ "min-height": "44px", "min-width": "44px" }}
+          {/* Footer controls */}
+          <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-end">
+            <button 
+              onClick={props.onClose} 
+              class="px-4 py-2 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 font-medium rounded-lg text-sm transition-colors cursor-pointer"
             >
               Cancel
             </button>
