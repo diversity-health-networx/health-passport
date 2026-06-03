@@ -24,7 +24,7 @@ function App() {
           </Link>
           <Link
             to="/admin/create"
-            class="rounded-full border border-[rgba(50,143,151,0.3)] bg-white/20 px-5 py-2.5 text-sm font-semibold text-[rgb(79,184,178)] no-underline transition hover:-translate-y-0.5 hover:border-[var(--sea-ink)]"
+            class="rounded-full border border-[rgba(50,143,151,0.3)] bg-white/10 px-5 py-2.5 text-sm font-semibold text-[rgb(79,184,178)] no-underline transition hover:-translate-y-0.5 hover:border-[var(--sea-ink)]"
           >
             Create Form
           </Link>
