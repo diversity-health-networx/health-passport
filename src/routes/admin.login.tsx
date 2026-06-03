@@ -3,6 +3,7 @@ import { createSignal, Show, onMount } from 'solid-js'
 import { ErrorModal } from '~/components/ErrorModal'
 import { setAuthState } from '~/utils/authStore'
 import type { AuthClientInfo } from '~/types/auth'
+import { ErrorResponse } from '~/types/error'
 
 export const Route = createFileRoute('/admin/login')({
   validateSearch: (search: Record<string, unknown> | undefined) => {
@@ -18,49 +19,66 @@ function AdminLogin() {
   const navigate = useNavigate()
 
   const [email, setEmail] = createSignal('')
-  const [status, setStatus] = createSignal<'idle' | 'sending' | 'success' | 'error' | 'verifying'>('idle')
+  // Start in a verifying state so the login form doesn't flash if a valid cookie exists
+  const [status, setStatus] = createSignal<'idle' | 'sending' | 'success' | 'error' | 'verifying'>('verifying')
   const [error, setError] = createSignal('')
 
   const [isErrorModalOpen, setIsErrorModalOpen] = createSignal(false)
   const [modalErrorMessage, setModalErrorMessage] = createSignal('')
 
-  // Clear stale auth state on mount to ensure a clean slate
-  onMount(() => {
-    setAuthState({})
-  })
-
   onMount(async () => {
     const loginToken = search().auth
-    if (search().auth) {
-      setStatus('verifying')
+
+    if (loginToken) {
+      // FLOW 1: Magic Link Token is present in the URL
       try {
         const response = await fetch(`/api/admin/login?auth=${loginToken}`, {
           method: 'POST',
         })
 
         if (!response.ok) {
-          const err: {error: string} = await response.json()
+          const err: ErrorResponse = await response.json()
           throw new Error(err.error || 'Failed to verify authentication token.')
         }
 
-        const result = (await response.json()) as { success: boolean; email: string }
+        const data: { success: boolean, email: string } = await response.json()
 
-        const newAuth: AuthClientInfo = {
-          user: result.email,
-          role: 'admin',
-        }
-        setAuthState(newAuth)
+        // Update the frontend auth store
+        setAuthState({ user: data.email, role: 'admin' })
 
+        // Redirect to admin dashboard
         navigate({ to: '/admin/forms', replace: true })
       } catch (err) {
         setStatus('idle')
+        setAuthState({}) // Purge any stale state
         setModalErrorMessage(err instanceof Error ? err.message : 'Invalid or expired magic link.')
         setIsErrorModalOpen(true)
 
-        setAuthState({})
-
-        navigate({ to: '/admin/login', replace: true, search: {auth: undefined} })
+        // Clean the URL so they can try again normally
+        navigate({ to: '/admin/forms', replace: true })
       }
+    } else {
+      // FLOW 2: No token, check for existing session via cookie
+      try {
+        const response = await fetch('/api/admin/refresh-auth', {
+          method: 'POST',
+        })
+        if (response.ok) {
+          const data = await response.json<AuthClientInfo>()
+          if (data.user) {
+            // Valid session detected! Update auth state and redirect
+            setAuthState({ user: data.user, role: data.role })
+            navigate({ to: '/admin/forms', replace: true })
+            return // Prevent status from resetting to 'idle' while redirecting
+          }
+        }
+      } catch (err) {
+        // Silently fail network errors here and just show the login form
+        console.error(err)
+      }
+      // No magic link and no valid session found. Reset state to show the form.
+      setAuthState({})
+      setStatus('idle')
     }
   })
 
@@ -78,7 +96,7 @@ function AdminLogin() {
 
       if (!response.ok) {
         const err = await response.json()
-        if(err instanceof Error) {
+        if (err instanceof Error) {
           throw new Error(err.message || 'Failed to send magic link');
         }
       }
@@ -90,13 +108,14 @@ function AdminLogin() {
     }
   }
 
+  // Render a loading state during both session check and magic link verification
   if (status() === 'verifying') {
     return (
       <div class="min-h-screen flex items-center justify-center p-4">
-         <div class="text-center">
-            <h2 class="text-xl font-semibold text-slate-900 mb-2">Verifying Login...</h2>
-            <p class="text-slate-600">Please wait while we securely authenticate your session.</p>
-         </div>
+        <div class="text-center">
+          <h2 class="text-xl font-semibold text-slate-900 mb-2">Authenticating...</h2>
+          <p class="text-slate-500">Please wait while we verify your session.</p>
+        </div>
       </div>
     )
   }
@@ -105,7 +124,7 @@ function AdminLogin() {
     <div class="min-h-screen flex items-center justify-center p-4">
       <div class="bg-white border border-slate-200 rounded-lg shadow-sm p-8 max-w-md w-full">
         <h1 class="text-2xl font-bold text-slate-900 mb-2">Admin Login</h1>
-        <p class="text-sm text-slate-600 mb-6">Enter your @dhnrx.com email to receive a magic link</p>
+        <p class="text-sm text-slate-500 mb-6">Enter your @dhnrx.com email to receive a magic link</p>
 
         <form onSubmit={handleSubmit} class="space-y-4">
           <div>
