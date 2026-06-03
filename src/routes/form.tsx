@@ -17,16 +17,24 @@ export const Route = createFileRoute('/form')({
 function FormGatewayRoute() {
   const searchParams = useSearch({ from: '/form' })
 
+  // 1. Evaluate the searchParams signal safely to get standard primitive fields
   const targetFormId = () => searchParams().id
   const targetFormName = () => searchParams().name
   const functionalMode = () => searchParams().view
 
+  // 2. Pass those primitive values straight to the resource source key
   const [formSchema] = createResource(
-    () => ({ id: targetFormId(), name: targetFormName() }),
+    () => {
+      const id = targetFormId()
+      const name = targetFormName()
+      return (id || name) ? { id, name } : null
+    },
     async query => {
+      // If the source tracking function returns null, createResource won't trigger this fetcher
       const searchUrl = query.id
         ? `/api/form-settings?id=${encodeURIComponent(query.id)}`
         : `/api/form-settings?name=${encodeURIComponent(query.name || '')}`
+      
       try {
         const response = await fetch(searchUrl)
         if (!response.ok) throw new Error('Form not found')

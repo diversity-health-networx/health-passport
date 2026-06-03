@@ -6,7 +6,7 @@ import { getAuth } from '~/utils/authStore'
 
 export const Route = createFileRoute('/admin/create')({
   beforeLoad: () => {
-    if (!getAuth().user) {
+    if (!import.meta.env.DEV && getAuth().role != 'admin') {
       throw redirect({ to: '/admin/login', search: { auth: undefined } })
     }
   },

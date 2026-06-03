@@ -77,6 +77,10 @@ function RootDocument({ children }: { children: Solid.JSX.Element }) {
       }
     } catch {
       // ignore
+      import.meta.env.DEV && setAuthState({
+        user: import.meta.env.DEV_EMAIL,
+        role: 'admin'
+      })
     }
   })
 

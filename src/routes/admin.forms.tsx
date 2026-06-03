@@ -6,7 +6,7 @@ import styles from './AdminForms.module.css'
 
 export const Route = createFileRoute('/admin/forms')({
   beforeLoad: () => {
-    if (!getAuth().user) {
+    if (!import.meta.env.DEV && getAuth().role != 'admin') {
       throw redirect({ to: '/admin/login', search: { auth: undefined } })
     }
   },
