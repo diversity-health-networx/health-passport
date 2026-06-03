@@ -1,5 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/solid-router'
 import { createSignal, For, Show } from 'solid-js'
+import { createStore } from 'solid-js/store'
 import type { QuestionType } from '~/types/form'
 import { getAuth } from '~/utils/authStore'
 
@@ -14,7 +15,7 @@ export const Route = createFileRoute('/admin/create')({
 
 function FormSchemaBuilderWorkspace() {
   const navigate = Route.useNavigate()
-  const [fields, setFields] = createSignal<any[]>([])
+  const [fields, setFields] = createStore<any[]>([])
   const [formName, setFormName] = createSignal('')
   const [allowOverwrite, setAllowOverwrite] = createSignal(false)
   const [expiryDate, setExpiryDate] = createSignal<string | null>(null)
@@ -31,15 +32,15 @@ function FormSchemaBuilderWorkspace() {
         autoPopulateFromUrl: false,
       },
     }
-    setFields([...fields(), newField])
+    setFields([...fields, newField])
   }
 
   const purgeQuestionTrack = (id: string) => {
-    setFields(fields().filter(f => f.id !== id))
+    setFields(fields.filter(f => f.id !== id))
   }
 
   const updateField = (id: string, updates: any) => {
-    setFields(fields().map(f => (f.id === id ? { ...f, ...updates } : f)))
+    setFields(f => f.id === id, updates)
   }
 
   const compileAndCommitSchema = async () => {
@@ -48,7 +49,7 @@ function FormSchemaBuilderWorkspace() {
       userIdConstraint: 'user_id',
       allowOverwrite: allowOverwrite(),
       submissionsExpiry: expiryDate() ? Math.floor(new Date(expiryDate() || 0).getTime() / 1000) : null,
-      fieldCollection: fields(),
+      fieldCollection: fields,
     }
 
     const submitCall = await fetch('/api/admin/create-form', {
@@ -133,7 +134,7 @@ function FormSchemaBuilderWorkspace() {
         </div>
 
         <div class="space-y-3">
-          <For each={fields()}>
+          <For each={fields}>
             {field => (
               <div class="border border-slate-200 rounded-lg p-4 bg-slate-50">
                 <div class="grid grid-cols-2 gap-3 mb-3">
@@ -160,7 +161,7 @@ function FormSchemaBuilderWorkspace() {
                 <div class="flex items-center justify-between">
                   <span class="text-xs text-slate-500">Type: {field.fieldType}</span>
                   <div class="flex items-center gap-3">
-                    <label class="flex items-center gap-1 text-xs">
+                    <label class="flex items-center gap-1 text-xs text-gray-700">
                       <input
                         type="checkbox"
                         checked={field.metaSettings.required}
@@ -173,7 +174,7 @@ function FormSchemaBuilderWorkspace() {
                       Required
                     </label>
                     <Show when={field.fieldType === 'text'}>
-                      <label class="flex items-center gap-1 text-xs">
+                      <label class="flex items-center gap-1 text-xs text-gray-700">
                         <input
                           type="checkbox"
                           checked={field.metaSettings.qrScanPopulate ?? false}
@@ -205,7 +206,7 @@ function FormSchemaBuilderWorkspace() {
         <button
           type="button"
           onClick={compileAndCommitSchema}
-          disabled={!formName() || fields().length === 0}
+          disabled={!formName() || fields.length === 0}
           class="px-4 py-2 bg-indigo-600 text-white rounded text-sm font-medium hover:bg-indigo-700 hover::opacity-70 disabled:opacity-60 hover:cursor-pointer"
         >
           Save Form
