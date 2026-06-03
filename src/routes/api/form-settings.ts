@@ -5,8 +5,10 @@ import { env } from 'cloudflare:workers'
 export const Route = createFileRoute('/api/form-settings')({
     server: {
         handlers: {
-            GET: async ({ params }) => {
-                const id = params as Record<string,string>['id'] || undefined
+            GET: async ({ request }) => {
+                const url = new URL(request.url)
+                const id = url.searchParams.get('id')
+                const name = url.searchParams.get('name')
                 const db = env.DB
 
                 if (id) {
@@ -22,8 +24,6 @@ export const Route = createFileRoute('/api/form-settings')({
                         questions_json: result.questions_json,
                     })
                 }
-
-                const name = params as Record<string,string>['name'] || undefined
 
                 if (name) {
                     const result = await db.prepare('SELECT * FROM forms WHERE LOWER(name) = ?').bind(name.toLowerCase()).first()

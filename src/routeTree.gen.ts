@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RedirectRouteImport } from './routes/redirect'
-import { Route as FormRouteImport } from './routes/form'
 import { Route as PathlessLayoutRouteImport } from './routes/_pathlessLayout'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as FormFormIdRouteImport } from './routes/form.$formId'
@@ -42,11 +41,6 @@ const RedirectRoute = RedirectRouteImport.update({
   path: '/redirect',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FormRoute = FormRouteImport.update({
-  id: '/form',
-  path: '/form',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PathlessLayoutRoute = PathlessLayoutRouteImport.update({
   id: '/_pathlessLayout',
   getParentRoute: () => rootRouteImport,
@@ -57,9 +51,9 @@ const IndexRoute = IndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const FormFormIdRoute = FormFormIdRouteImport.update({
-  id: '/$formId',
-  path: '/$formId',
-  getParentRoute: () => FormRoute,
+  id: '/form/$formId',
+  path: '/form/$formId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiSubmissionsRoute = ApiSubmissionsRouteImport.update({
   id: '/api/submissions',
@@ -177,7 +171,6 @@ const PathlessLayoutNestedLayoutRouteARoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/form': typeof FormRouteWithChildren
   '/redirect': typeof RedirectRoute
   '/admin/create': typeof AdminCreateRoute
   '/admin/forms': typeof AdminFormsRoute
@@ -204,7 +197,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/form': typeof FormRouteWithChildren
   '/redirect': typeof RedirectRoute
   '/admin/create': typeof AdminCreateRoute
   '/admin/forms': typeof AdminFormsRoute
@@ -233,7 +225,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_pathlessLayout': typeof PathlessLayoutRouteWithChildren
-  '/form': typeof FormRouteWithChildren
   '/redirect': typeof RedirectRoute
   '/_pathlessLayout/_nested-layout': typeof PathlessLayoutNestedLayoutRouteWithChildren
   '/admin/create': typeof AdminCreateRoute
@@ -263,7 +254,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/form'
     | '/redirect'
     | '/admin/create'
     | '/admin/forms'
@@ -290,7 +280,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/form'
     | '/redirect'
     | '/admin/create'
     | '/admin/forms'
@@ -318,7 +307,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_pathlessLayout'
-    | '/form'
     | '/redirect'
     | '/_pathlessLayout/_nested-layout'
     | '/admin/create'
@@ -348,7 +336,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PathlessLayoutRoute: typeof PathlessLayoutRouteWithChildren
-  FormRoute: typeof FormRouteWithChildren
   RedirectRoute: typeof RedirectRoute
   AdminCreateRoute: typeof AdminCreateRoute
   AdminFormsRoute: typeof AdminFormsRoute
@@ -359,6 +346,7 @@ export interface RootRouteChildren {
   ApiFormSubmissionRoute: typeof ApiFormSubmissionRoute
   ApiGlobalSettingsRoute: typeof ApiGlobalSettingsRoute
   ApiSubmissionsRoute: typeof ApiSubmissionsRoute
+  FormFormIdRoute: typeof FormFormIdRoute
   ApiAdminCreateFormRoute: typeof ApiAdminCreateFormRoute
   ApiAdminEmailCsvReportRoute: typeof ApiAdminEmailCsvReportRoute
   ApiAdminGetAllFormsRoute: typeof ApiAdminGetAllFormsRoute
@@ -380,13 +368,6 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof RedirectRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/form': {
-      id: '/form'
-      path: '/form'
-      fullPath: '/form'
-      preLoaderRoute: typeof FormRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_pathlessLayout': {
       id: '/_pathlessLayout'
       path: ''
@@ -403,10 +384,10 @@ declare module '@tanstack/solid-router' {
     }
     '/form/$formId': {
       id: '/form/$formId'
-      path: '/$formId'
+      path: '/form/$formId'
       fullPath: '/form/$formId'
       preLoaderRoute: typeof FormFormIdRouteImport
-      parentRoute: typeof FormRoute
+      parentRoute: typeof rootRouteImport
     }
     '/api/submissions': {
       id: '/api/submissions'
@@ -595,20 +576,9 @@ const PathlessLayoutRouteWithChildren = PathlessLayoutRoute._addFileChildren(
   PathlessLayoutRouteChildren,
 )
 
-interface FormRouteChildren {
-  FormFormIdRoute: typeof FormFormIdRoute
-}
-
-const FormRouteChildren: FormRouteChildren = {
-  FormFormIdRoute: FormFormIdRoute,
-}
-
-const FormRouteWithChildren = FormRoute._addFileChildren(FormRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PathlessLayoutRoute: PathlessLayoutRouteWithChildren,
-  FormRoute: FormRouteWithChildren,
   RedirectRoute: RedirectRoute,
   AdminCreateRoute: AdminCreateRoute,
   AdminFormsRoute: AdminFormsRoute,
@@ -619,6 +589,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiFormSubmissionRoute: ApiFormSubmissionRoute,
   ApiGlobalSettingsRoute: ApiGlobalSettingsRoute,
   ApiSubmissionsRoute: ApiSubmissionsRoute,
+  FormFormIdRoute: FormFormIdRoute,
   ApiAdminCreateFormRoute: ApiAdminCreateFormRoute,
   ApiAdminEmailCsvReportRoute: ApiAdminEmailCsvReportRoute,
   ApiAdminGetAllFormsRoute: ApiAdminGetAllFormsRoute,

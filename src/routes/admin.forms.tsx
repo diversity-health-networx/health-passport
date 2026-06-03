@@ -60,7 +60,7 @@ function AdminFormsDashboard() {
                     </td>
                     <td class={styles.td}>
                       <div class={styles.actions}>
-                        <a href={`/form?id=${form.id}&view=admin`} class={styles.actionLink}>
+                        <a href={`/form/${form.id}?view=admin`} class={styles.actionLink}>
                           Dashboard
                         </a>
                         <button onClick={() => executeFormDeletion(form.id)} class={styles.deleteAction}>
