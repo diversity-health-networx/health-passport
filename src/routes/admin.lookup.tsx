@@ -26,7 +26,7 @@ function UserSubmissionCrossLookup() {
     <div class="max-w-6xl mx-auto p-8">
       <div class="mb-8">
         <h1 class="text-2xl font-bold text-blue-600">User History Lookup Portal</h1>
-        <p class="text-sm text-slate-500">Cross-reference and trace all form records bound to a user ID.</p>
+        <p class="text-sm text-slate-600">Cross-reference and trace all form records bound to a user ID.</p>
       </div>
 
       <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200 mb-8 flex gap-4">
@@ -45,7 +45,7 @@ function UserSubmissionCrossLookup() {
         </button>
       </div>
 
-      <Show when={!matchesQuery.isLoading} fallback={<p class="text-center py-6 text-sm text-slate-500">Searching submission archives...</p>}>
+      <Show when={!matchesQuery.isLoading} fallback={<p class="text-center py-6 text-sm text-slate-600">Searching submission archives...</p>}>
         <div class="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
           <table class="w-full text-left border-collapse">
             <thead>
@@ -65,7 +65,7 @@ function UserSubmissionCrossLookup() {
                     <td class="p-4 text-slate-600">
                       {new Date(extractTimestampFromUUIDv7(record.id) * 1000).toLocaleString()}
                     </td>
-                    <td class="p-4 font-mono text-xs text-slate-500 max-w-sm truncate" title={record.answers_json}>
+                    <td class="p-4 font-mono text-xs text-slate-600 max-w-sm truncate" title={record.answers_json}>
                       {record.answers_json}
                     </td>
                   </tr>

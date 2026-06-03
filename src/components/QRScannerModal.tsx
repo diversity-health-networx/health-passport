@@ -263,7 +263,7 @@ export function QRScannerModal(props: QRScannerModalProps) {
                 </svg>
                 Choose Image
               </label>
-              <p class="text-xs text-slate-500 mt-3">Supported formats: JPEG, PNG, WebP, GIF</p>
+              <p class="text-xs text-slate-600 mt-3">Supported formats: JPEG, PNG, WebP, GIF</p>
               <Show when={fileError()}>
                 <p class="text-red-600 text-sm mt-3">{fileError()}</p>
               </Show>
@@ -286,7 +286,7 @@ export function QRScannerModal(props: QRScannerModalProps) {
           <div class="flex justify-end pt-2 border-t border-slate-200">
             <button
               onClick={props.onClose}
-              class="px-5 py-2.5 bg-slate-100 text-slate-700 rounded-lg font-medium hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-500 transition-all duration-200"
+              class="px-5 py-2.5 bg-slate-100 text-slate-700 rounded-lg font-medium hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-600 transition-all duration-200"
               style={{ "min-height": "44px", "min-width": "44px" }}
             >
               Cancel

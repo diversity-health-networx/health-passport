@@ -79,7 +79,7 @@ function FormSchemaBuilderWorkspace() {
             value={formName()}
             onInput={e => setFormName(e.currentTarget.value)}
             placeholder="Enter form name..."
-            class="w-full border text-slate-700 placeholder:text-slate-500 border-slate-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            class="w-full border text-slate-700 placeholder:text-slate-600 border-slate-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
 
@@ -94,7 +94,7 @@ function FormSchemaBuilderWorkspace() {
             onInput={e => setExpiryDate(e.currentTarget.value || null)}
             class="w-full text-slate-700 border border-slate-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
-          <p class="text-xs text-slate-500 mt-1">
+          <p class="text-xs text-slate-600 mt-1">
             Form will stop accepting submissions after this time. Leave empty for no expiry.
           </p>
         </div>
@@ -111,7 +111,7 @@ function FormSchemaBuilderWorkspace() {
             Allow Users to Overwrite Existing Submissions
           </label>
         </div>
-        <p class="text-xs text-slate-500 mt-1">
+        <p class="text-xs text-slate-600 mt-1">
             When enabled, users can resubmit to update their previous responses. If disabled, users will be blocked from submitting more than once.
           </p>
       </div>
@@ -159,7 +159,7 @@ function FormSchemaBuilderWorkspace() {
                 </div>
 
                 <div class="flex items-center justify-between">
-                  <span class="text-xs text-slate-500">Type: {field.fieldType}</span>
+                  <span class="text-xs text-slate-600">Type: {field.fieldType}</span>
                   <div class="flex items-center gap-3">
                     <label class="flex items-center gap-1 text-xs text-gray-700">
                       <input

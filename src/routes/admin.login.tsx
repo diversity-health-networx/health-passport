@@ -95,7 +95,7 @@ function AdminLogin() {
       <div class="min-h-screen flex items-center justify-center p-4">
          <div class="text-center">
             <h2 class="text-xl font-semibold text-slate-900 mb-2">Verifying Login...</h2>
-            <p class="text-slate-500">Please wait while we securely authenticate your session.</p>
+            <p class="text-slate-600">Please wait while we securely authenticate your session.</p>
          </div>
       </div>
     )
@@ -105,7 +105,7 @@ function AdminLogin() {
     <div class="min-h-screen flex items-center justify-center p-4">
       <div class="bg-white border border-slate-200 rounded-lg shadow-sm p-8 max-w-md w-full">
         <h1 class="text-2xl font-bold text-slate-900 mb-2">Admin Login</h1>
-        <p class="text-sm text-slate-500 mb-6">Enter your @dhnrx.com email to receive a magic link</p>
+        <p class="text-sm text-slate-600 mb-6">Enter your @dhnrx.com email to receive a magic link</p>
 
         <form onSubmit={handleSubmit} class="space-y-4">
           <div>
