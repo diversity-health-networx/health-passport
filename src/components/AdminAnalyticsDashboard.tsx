@@ -18,6 +18,7 @@ export function AdminAnalyticsDashboard(props: AdminAnalyticsDashboardProps) {
       ? new Date(props.form.submissionsExpiry * 1000).toISOString().slice(0, 16)
       : ''
   )
+  const [isMappingExpanded, setIsMappingExpanded] = createSignal(false)
 
   const submissionsQuery = createQuery(() => ({
     // Wrapping the dynamic parameter ensures SolidJS registers a reactive dependency on props.form.id
@@ -196,10 +197,17 @@ export function AdminAnalyticsDashboard(props: AdminAnalyticsDashboardProps) {
                 <span class={styles.fieldValue}>{selectedSubmission().user_id}</span>
               </div>
               <div>
-                <span class={styles.fieldLabel}>Field Response Parameters Mapping</span>
-                <div class={styles.jsonBox}>
-                  {JSON.stringify(JSON.parse(selectedSubmission().answers_json), null, 2)}
+                <div class={styles.mappingHeader} onClick={() => setIsMappingExpanded(!isMappingExpanded())}>
+                  <span class={styles.fieldLabel}>Field Response Parameters Mapping</span>
+                  <span class={`${styles.caret} ${isMappingExpanded() ? styles.caretUp : styles.caretDown}`} aria-hidden="true">
+                    ▼
+                  </span>
                 </div>
+                <Show when={isMappingExpanded()}>
+                  <div class={styles.jsonBox}>
+                    {JSON.stringify(JSON.parse(selectedSubmission().answers_json), null, 2)}
+                  </div>
+                </Show>
               </div>
             </div>
           </Show>

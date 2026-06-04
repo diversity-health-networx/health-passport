@@ -491,3 +491,33 @@
   margin: 0 auto;
   padding: 2rem 1.5rem;
 }
+
+/* Field Response Parameters Mapping styles */
+.mappingHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  width: 100%;
+}
+
+.mappingHeader:hover .fieldLabel {
+  color: #4f46e5;
+}
+
+.caret {
+  color: #000;
+  font-size: 0.75rem;
+  margin-left: 0.5rem;
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+
+.caretDown {
+  transform: rotate(0deg);
+}
+
+.caretUp {
+  transform: rotate(180deg);
+}
