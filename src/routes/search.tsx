@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/solid-router'
+import { createFileRoute, Link } from '@tanstack/solid-router'
 import { createSignal, For, Show } from 'solid-js'
 import { createQuery } from '@tanstack/solid-query'
 import { extractTimestampFromUUIDv7 } from '../utils/uuid'
@@ -85,10 +85,10 @@ function UserSubmissionCrossLookup() {
           <table class="w-full text-left border-collapse">
             <thead>
               <tr class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-700 uppercase">
-                <th class="p-4">Submission Token (UUIDv7)</th>
-                <th class="p-4">Target Form Instance</th>
-                <th class="p-4">Decoded Temporal Frame</th>
-                <th class="p-4">Recorded Values Package</th>
+                <th class="p-4">Submission ID</th>
+                <th class="p-4">Time</th>
+                <th class="p-4">Form</th>
+                <th class="p-4">Action</th>
               </tr>
             </thead>
             <tbody class="text-sm divide-y divide-slate-100">
@@ -96,12 +96,12 @@ function UserSubmissionCrossLookup() {
                 {record => (
                   <tr class="hover:bg-slate-50">
                     <td class="p-4 font-mono text-xs text-slate-600">{record.id}</td>
-                    <td class="p-4 font-medium text-slate-900">{record.form_name}</td>
                     <td class="p-4 text-slate-600">
                       {new Date(extractTimestampFromUUIDv7(record.id) * 1000).toLocaleString()}
                     </td>
+                    <td class="p-4 font-medium text-slate-900">{record.form_name}</td>
                     <td class="p-4 font-mono text-xs text-slate-600 max-w-sm truncate" title={record.answers_json}>
-                      {record.answers_json}
+                      <Link to='/submission/$submissionId' params={{ submissionId: record.id }} >View</Link>
                     </td>
                   </tr>
                 )}

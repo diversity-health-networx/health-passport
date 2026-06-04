@@ -13,6 +13,7 @@ import { Route as SearchRouteImport } from './routes/search'
 import { Route as RedirectRouteImport } from './routes/redirect'
 import { Route as PathlessLayoutRouteImport } from './routes/_pathlessLayout'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SubmissionSubmissionIdRouteImport } from './routes/submission.$submissionId'
 import { Route as FormFormIdRouteImport } from './routes/form.$formId'
 import { Route as ApiSubmissionsByUserRouteImport } from './routes/api/submissions-by-user'
 import { Route as ApiSubmissionsRouteImport } from './routes/api/submissions'
@@ -53,6 +54,11 @@ const PathlessLayoutRoute = PathlessLayoutRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubmissionSubmissionIdRoute = SubmissionSubmissionIdRouteImport.update({
+  id: '/submission/$submissionId',
+  path: '/submission/$submissionId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FormFormIdRoute = FormFormIdRouteImport.update({
@@ -181,6 +187,7 @@ export interface FileRoutesByFullPath {
   '/api/submissions': typeof ApiSubmissionsRoute
   '/api/submissions-by-user': typeof ApiSubmissionsByUserRoute
   '/form/$formId': typeof FormFormIdRoute
+  '/submission/$submissionId': typeof SubmissionSubmissionIdRoute
   '/route-a': typeof PathlessLayoutNestedLayoutRouteARoute
   '/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
   '/api/admin/create-form': typeof ApiAdminCreateFormRoute
@@ -207,6 +214,7 @@ export interface FileRoutesByTo {
   '/api/submissions': typeof ApiSubmissionsRoute
   '/api/submissions-by-user': typeof ApiSubmissionsByUserRoute
   '/form/$formId': typeof FormFormIdRoute
+  '/submission/$submissionId': typeof SubmissionSubmissionIdRoute
   '/route-a': typeof PathlessLayoutNestedLayoutRouteARoute
   '/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
   '/api/admin/create-form': typeof ApiAdminCreateFormRoute
@@ -236,6 +244,7 @@ export interface FileRoutesById {
   '/api/submissions': typeof ApiSubmissionsRoute
   '/api/submissions-by-user': typeof ApiSubmissionsByUserRoute
   '/form/$formId': typeof FormFormIdRoute
+  '/submission/$submissionId': typeof SubmissionSubmissionIdRoute
   '/_pathlessLayout/_nested-layout/route-a': typeof PathlessLayoutNestedLayoutRouteARoute
   '/_pathlessLayout/_nested-layout/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
   '/api/admin/create-form': typeof ApiAdminCreateFormRoute
@@ -264,6 +273,7 @@ export interface FileRouteTypes {
     | '/api/submissions'
     | '/api/submissions-by-user'
     | '/form/$formId'
+    | '/submission/$submissionId'
     | '/route-a'
     | '/route-b'
     | '/api/admin/create-form'
@@ -290,6 +300,7 @@ export interface FileRouteTypes {
     | '/api/submissions'
     | '/api/submissions-by-user'
     | '/form/$formId'
+    | '/submission/$submissionId'
     | '/route-a'
     | '/route-b'
     | '/api/admin/create-form'
@@ -318,6 +329,7 @@ export interface FileRouteTypes {
     | '/api/submissions'
     | '/api/submissions-by-user'
     | '/form/$formId'
+    | '/submission/$submissionId'
     | '/_pathlessLayout/_nested-layout/route-a'
     | '/_pathlessLayout/_nested-layout/route-b'
     | '/api/admin/create-form'
@@ -346,6 +358,7 @@ export interface RootRouteChildren {
   ApiSubmissionsRoute: typeof ApiSubmissionsRoute
   ApiSubmissionsByUserRoute: typeof ApiSubmissionsByUserRoute
   FormFormIdRoute: typeof FormFormIdRoute
+  SubmissionSubmissionIdRoute: typeof SubmissionSubmissionIdRoute
   ApiAdminCreateFormRoute: typeof ApiAdminCreateFormRoute
   ApiAdminEmailCsvReportRoute: typeof ApiAdminEmailCsvReportRoute
   ApiAdminFormSubmissionsRoute: typeof ApiAdminFormSubmissionsRoute
@@ -386,6 +399,13 @@ declare module '@tanstack/solid-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/submission/$submissionId': {
+      id: '/submission/$submissionId'
+      path: '/submission/$submissionId'
+      fullPath: '/submission/$submissionId'
+      preLoaderRoute: typeof SubmissionSubmissionIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/form/$formId': {
@@ -589,6 +609,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiSubmissionsRoute: ApiSubmissionsRoute,
   ApiSubmissionsByUserRoute: ApiSubmissionsByUserRoute,
   FormFormIdRoute: FormFormIdRoute,
+  SubmissionSubmissionIdRoute: SubmissionSubmissionIdRoute,
   ApiAdminCreateFormRoute: ApiAdminCreateFormRoute,
   ApiAdminEmailCsvReportRoute: ApiAdminEmailCsvReportRoute,
   ApiAdminFormSubmissionsRoute: ApiAdminFormSubmissionsRoute,
