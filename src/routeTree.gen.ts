@@ -17,6 +17,7 @@ import { Route as SubmissionSubmissionIdRouteImport } from './routes/submission.
 import { Route as FormFormIdRouteImport } from './routes/form.$formId'
 import { Route as ApiSubmissionsByUserRouteImport } from './routes/api/submissions-by-user'
 import { Route as ApiSubmissionsRouteImport } from './routes/api/submissions'
+import { Route as ApiSubmissionRouteImport } from './routes/api/submission'
 import { Route as ApiGlobalSettingsRouteImport } from './routes/api/global-settings'
 import { Route as ApiFormSettingsRouteImport } from './routes/api/form-settings'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
@@ -74,6 +75,11 @@ const ApiSubmissionsByUserRoute = ApiSubmissionsByUserRouteImport.update({
 const ApiSubmissionsRoute = ApiSubmissionsRouteImport.update({
   id: '/api/submissions',
   path: '/api/submissions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSubmissionRoute = ApiSubmissionRouteImport.update({
+  id: '/api/submission',
+  path: '/api/submission',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiGlobalSettingsRoute = ApiGlobalSettingsRouteImport.update({
@@ -184,6 +190,7 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AdminSettingsRoute
   '/api/form-settings': typeof ApiFormSettingsRoute
   '/api/global-settings': typeof ApiGlobalSettingsRoute
+  '/api/submission': typeof ApiSubmissionRoute
   '/api/submissions': typeof ApiSubmissionsRoute
   '/api/submissions-by-user': typeof ApiSubmissionsByUserRoute
   '/form/$formId': typeof FormFormIdRoute
@@ -211,6 +218,7 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AdminSettingsRoute
   '/api/form-settings': typeof ApiFormSettingsRoute
   '/api/global-settings': typeof ApiGlobalSettingsRoute
+  '/api/submission': typeof ApiSubmissionRoute
   '/api/submissions': typeof ApiSubmissionsRoute
   '/api/submissions-by-user': typeof ApiSubmissionsByUserRoute
   '/form/$formId': typeof FormFormIdRoute
@@ -241,6 +249,7 @@ export interface FileRoutesById {
   '/admin/settings': typeof AdminSettingsRoute
   '/api/form-settings': typeof ApiFormSettingsRoute
   '/api/global-settings': typeof ApiGlobalSettingsRoute
+  '/api/submission': typeof ApiSubmissionRoute
   '/api/submissions': typeof ApiSubmissionsRoute
   '/api/submissions-by-user': typeof ApiSubmissionsByUserRoute
   '/form/$formId': typeof FormFormIdRoute
@@ -270,6 +279,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/api/form-settings'
     | '/api/global-settings'
+    | '/api/submission'
     | '/api/submissions'
     | '/api/submissions-by-user'
     | '/form/$formId'
@@ -297,6 +307,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/api/form-settings'
     | '/api/global-settings'
+    | '/api/submission'
     | '/api/submissions'
     | '/api/submissions-by-user'
     | '/form/$formId'
@@ -326,6 +337,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/api/form-settings'
     | '/api/global-settings'
+    | '/api/submission'
     | '/api/submissions'
     | '/api/submissions-by-user'
     | '/form/$formId'
@@ -355,6 +367,7 @@ export interface RootRouteChildren {
   AdminSettingsRoute: typeof AdminSettingsRoute
   ApiFormSettingsRoute: typeof ApiFormSettingsRoute
   ApiGlobalSettingsRoute: typeof ApiGlobalSettingsRoute
+  ApiSubmissionRoute: typeof ApiSubmissionRoute
   ApiSubmissionsRoute: typeof ApiSubmissionsRoute
   ApiSubmissionsByUserRoute: typeof ApiSubmissionsByUserRoute
   FormFormIdRoute: typeof FormFormIdRoute
@@ -427,6 +440,13 @@ declare module '@tanstack/solid-router' {
       path: '/api/submissions'
       fullPath: '/api/submissions'
       preLoaderRoute: typeof ApiSubmissionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/submission': {
+      id: '/api/submission'
+      path: '/api/submission'
+      fullPath: '/api/submission'
+      preLoaderRoute: typeof ApiSubmissionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/global-settings': {
@@ -606,6 +626,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminSettingsRoute: AdminSettingsRoute,
   ApiFormSettingsRoute: ApiFormSettingsRoute,
   ApiGlobalSettingsRoute: ApiGlobalSettingsRoute,
+  ApiSubmissionRoute: ApiSubmissionRoute,
   ApiSubmissionsRoute: ApiSubmissionsRoute,
   ApiSubmissionsByUserRoute: ApiSubmissionsByUserRoute,
   FormFormIdRoute: FormFormIdRoute,

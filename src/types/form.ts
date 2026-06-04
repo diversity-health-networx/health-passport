@@ -43,8 +43,16 @@ export interface DynamicFormSchema {
 }
 
 export interface SubmissionRequestBody {
-    formId: string
-    userId: string
-    formName: string
-    answers: unknown
+  formId: string
+  userId: string
+  formName: string
+  answers: unknown
+}
+
+export interface SubmissionResponse {
+  id: string
+  userId: string
+  submittedAt: number
+  fields: FormField[]
+  answers: Record<string, any>
 }
