@@ -87,7 +87,7 @@ function UserSubmissionCrossLookup() {
   return (
     <div class="max-w-6xl mx-auto p-4 md:p-8 space-y-6">
       <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-        <h1 class="text-2xl font-bold text-slate-900 mb-2">Submission Lookup</h1>
+        <h1 class="text-2xl font-bold text-slate-900 mb-2">Submission Search 🔎</h1>
         <p class="text-sm text-slate-500 mb-6">Enter a User ID or scan their QR code to view all associated form submissions.</p>
 
         <form onSubmit={handleSearch} class="flex gap-4">
