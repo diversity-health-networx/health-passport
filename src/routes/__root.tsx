@@ -45,9 +45,10 @@ export const Route = createRootRoute({
   component: RootLayout,
 })
 
+export const queryClient = new QueryClient()
+
 // RootLayout renders the router outlet and query client providers.
 function RootLayout() {
-  const queryClient = new QueryClient()
 
   return (
     <QueryClientProvider client={queryClient}>
