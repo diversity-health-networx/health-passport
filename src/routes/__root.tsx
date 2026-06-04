@@ -113,11 +113,11 @@ function RootDocument({ children }: { children: Solid.JSX.Element }) {
         <HeadContent />
         <div class="p-2 flex gap-4 text-sm mx-2">
           <Link to="/" activeProps={{ class: 'font-bold' }} activeOptions={{ exact: true }}>Home</Link>
+          <Link to="/lookup" activeProps={{ class: 'font-bold' }}>search</Link>
           <Show when={isAdmin()} fallback={
             <Link to="/admin/login" class='ml-auto' activeProps={{ class: 'font-bold' }} search={{ auth: undefined }}>login</Link>
           }>
             <Link to="/admin/forms" class='ml-auto' activeProps={{ class: 'font-bold' }}>forms</Link>
-            <Link to="/admin/lookup" activeProps={{ class: 'font-bold' }}>search</Link>
             <Link to="/admin/create" activeProps={{ class: 'font-bold' }}>create</Link>
             <Link to="/admin/settings" activeProps={{ class: 'font-bold' }}>settings</Link>
             <button class="cursor-pointer" onclick={logout}>logout</button>

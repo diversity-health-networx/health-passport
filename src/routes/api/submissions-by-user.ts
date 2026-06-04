@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/solid-router'
 import { env } from 'cloudflare:workers'
 
 // Lookup submissions by user - GET /api/admin/submissions-by-user
-export const Route = createFileRoute('/api/admin/submissions-by-user')({
+export const Route = createFileRoute('/api/submissions-by-user')({
     server: {
         handlers: {
             GET: async ({ request }) => {

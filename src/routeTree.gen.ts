@@ -10,21 +10,21 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RedirectRouteImport } from './routes/redirect'
+import { Route as LookupRouteImport } from './routes/lookup'
 import { Route as PathlessLayoutRouteImport } from './routes/_pathlessLayout'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as FormFormIdRouteImport } from './routes/form.$formId'
+import { Route as ApiSubmissionsByUserRouteImport } from './routes/api/submissions-by-user'
 import { Route as ApiSubmissionsRouteImport } from './routes/api/submissions'
 import { Route as ApiGlobalSettingsRouteImport } from './routes/api/global-settings'
 import { Route as ApiFormSettingsRouteImport } from './routes/api/form-settings'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
-import { Route as AdminLookupRouteImport } from './routes/admin.lookup'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminFormsRouteImport } from './routes/admin.forms'
 import { Route as AdminCreateRouteImport } from './routes/admin.create'
 import { Route as PathlessLayoutNestedLayoutRouteImport } from './routes/_pathlessLayout/_nested-layout'
 import { Route as ApiAdminToggleOverwriteRouteImport } from './routes/api/admin/toggle-overwrite'
 import { Route as ApiAdminToggleExpiryRouteImport } from './routes/api/admin/toggle-expiry'
-import { Route as ApiAdminSubmissionsByUserRouteImport } from './routes/api/admin/submissions-by-user'
 import { Route as ApiAdminRemoveFormRouteImport } from './routes/api/admin/remove-form'
 import { Route as ApiAdminRefreshAuthRouteImport } from './routes/api/admin/refresh-auth'
 import { Route as ApiAdminLogoutRouteImport } from './routes/api/admin/logout'
@@ -41,6 +41,11 @@ const RedirectRoute = RedirectRouteImport.update({
   path: '/redirect',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LookupRoute = LookupRouteImport.update({
+  id: '/lookup',
+  path: '/lookup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PathlessLayoutRoute = PathlessLayoutRouteImport.update({
   id: '/_pathlessLayout',
   getParentRoute: () => rootRouteImport,
@@ -53,6 +58,11 @@ const IndexRoute = IndexRouteImport.update({
 const FormFormIdRoute = FormFormIdRouteImport.update({
   id: '/form/$formId',
   path: '/form/$formId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSubmissionsByUserRoute = ApiSubmissionsByUserRouteImport.update({
+  id: '/api/submissions-by-user',
+  path: '/api/submissions-by-user',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiSubmissionsRoute = ApiSubmissionsRouteImport.update({
@@ -73,11 +83,6 @@ const ApiFormSettingsRoute = ApiFormSettingsRouteImport.update({
 const AdminSettingsRoute = AdminSettingsRouteImport.update({
   id: '/admin/settings',
   path: '/admin/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminLookupRoute = AdminLookupRouteImport.update({
-  id: '/admin/lookup',
-  path: '/admin/lookup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
@@ -110,12 +115,6 @@ const ApiAdminToggleExpiryRoute = ApiAdminToggleExpiryRouteImport.update({
   path: '/api/admin/toggle-expiry',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiAdminSubmissionsByUserRoute =
-  ApiAdminSubmissionsByUserRouteImport.update({
-    id: '/api/admin/submissions-by-user',
-    path: '/api/admin/submissions-by-user',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const ApiAdminRemoveFormRoute = ApiAdminRemoveFormRouteImport.update({
   id: '/api/admin/remove-form',
   path: '/api/admin/remove-form',
@@ -171,15 +170,16 @@ const PathlessLayoutNestedLayoutRouteARoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/lookup': typeof LookupRoute
   '/redirect': typeof RedirectRoute
   '/admin/create': typeof AdminCreateRoute
   '/admin/forms': typeof AdminFormsRoute
   '/admin/login': typeof AdminLoginRoute
-  '/admin/lookup': typeof AdminLookupRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/api/form-settings': typeof ApiFormSettingsRoute
   '/api/global-settings': typeof ApiGlobalSettingsRoute
   '/api/submissions': typeof ApiSubmissionsRoute
+  '/api/submissions-by-user': typeof ApiSubmissionsByUserRoute
   '/form/$formId': typeof FormFormIdRoute
   '/route-a': typeof PathlessLayoutNestedLayoutRouteARoute
   '/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
@@ -191,21 +191,21 @@ export interface FileRoutesByFullPath {
   '/api/admin/logout': typeof ApiAdminLogoutRoute
   '/api/admin/refresh-auth': typeof ApiAdminRefreshAuthRoute
   '/api/admin/remove-form': typeof ApiAdminRemoveFormRoute
-  '/api/admin/submissions-by-user': typeof ApiAdminSubmissionsByUserRoute
   '/api/admin/toggle-expiry': typeof ApiAdminToggleExpiryRoute
   '/api/admin/toggle-overwrite': typeof ApiAdminToggleOverwriteRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/lookup': typeof LookupRoute
   '/redirect': typeof RedirectRoute
   '/admin/create': typeof AdminCreateRoute
   '/admin/forms': typeof AdminFormsRoute
   '/admin/login': typeof AdminLoginRoute
-  '/admin/lookup': typeof AdminLookupRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/api/form-settings': typeof ApiFormSettingsRoute
   '/api/global-settings': typeof ApiGlobalSettingsRoute
   '/api/submissions': typeof ApiSubmissionsRoute
+  '/api/submissions-by-user': typeof ApiSubmissionsByUserRoute
   '/form/$formId': typeof FormFormIdRoute
   '/route-a': typeof PathlessLayoutNestedLayoutRouteARoute
   '/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
@@ -217,7 +217,6 @@ export interface FileRoutesByTo {
   '/api/admin/logout': typeof ApiAdminLogoutRoute
   '/api/admin/refresh-auth': typeof ApiAdminRefreshAuthRoute
   '/api/admin/remove-form': typeof ApiAdminRemoveFormRoute
-  '/api/admin/submissions-by-user': typeof ApiAdminSubmissionsByUserRoute
   '/api/admin/toggle-expiry': typeof ApiAdminToggleExpiryRoute
   '/api/admin/toggle-overwrite': typeof ApiAdminToggleOverwriteRoute
 }
@@ -225,16 +224,17 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_pathlessLayout': typeof PathlessLayoutRouteWithChildren
+  '/lookup': typeof LookupRoute
   '/redirect': typeof RedirectRoute
   '/_pathlessLayout/_nested-layout': typeof PathlessLayoutNestedLayoutRouteWithChildren
   '/admin/create': typeof AdminCreateRoute
   '/admin/forms': typeof AdminFormsRoute
   '/admin/login': typeof AdminLoginRoute
-  '/admin/lookup': typeof AdminLookupRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/api/form-settings': typeof ApiFormSettingsRoute
   '/api/global-settings': typeof ApiGlobalSettingsRoute
   '/api/submissions': typeof ApiSubmissionsRoute
+  '/api/submissions-by-user': typeof ApiSubmissionsByUserRoute
   '/form/$formId': typeof FormFormIdRoute
   '/_pathlessLayout/_nested-layout/route-a': typeof PathlessLayoutNestedLayoutRouteARoute
   '/_pathlessLayout/_nested-layout/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
@@ -246,7 +246,6 @@ export interface FileRoutesById {
   '/api/admin/logout': typeof ApiAdminLogoutRoute
   '/api/admin/refresh-auth': typeof ApiAdminRefreshAuthRoute
   '/api/admin/remove-form': typeof ApiAdminRemoveFormRoute
-  '/api/admin/submissions-by-user': typeof ApiAdminSubmissionsByUserRoute
   '/api/admin/toggle-expiry': typeof ApiAdminToggleExpiryRoute
   '/api/admin/toggle-overwrite': typeof ApiAdminToggleOverwriteRoute
 }
@@ -254,15 +253,16 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/lookup'
     | '/redirect'
     | '/admin/create'
     | '/admin/forms'
     | '/admin/login'
-    | '/admin/lookup'
     | '/admin/settings'
     | '/api/form-settings'
     | '/api/global-settings'
     | '/api/submissions'
+    | '/api/submissions-by-user'
     | '/form/$formId'
     | '/route-a'
     | '/route-b'
@@ -274,21 +274,21 @@ export interface FileRouteTypes {
     | '/api/admin/logout'
     | '/api/admin/refresh-auth'
     | '/api/admin/remove-form'
-    | '/api/admin/submissions-by-user'
     | '/api/admin/toggle-expiry'
     | '/api/admin/toggle-overwrite'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/lookup'
     | '/redirect'
     | '/admin/create'
     | '/admin/forms'
     | '/admin/login'
-    | '/admin/lookup'
     | '/admin/settings'
     | '/api/form-settings'
     | '/api/global-settings'
     | '/api/submissions'
+    | '/api/submissions-by-user'
     | '/form/$formId'
     | '/route-a'
     | '/route-b'
@@ -300,23 +300,23 @@ export interface FileRouteTypes {
     | '/api/admin/logout'
     | '/api/admin/refresh-auth'
     | '/api/admin/remove-form'
-    | '/api/admin/submissions-by-user'
     | '/api/admin/toggle-expiry'
     | '/api/admin/toggle-overwrite'
   id:
     | '__root__'
     | '/'
     | '/_pathlessLayout'
+    | '/lookup'
     | '/redirect'
     | '/_pathlessLayout/_nested-layout'
     | '/admin/create'
     | '/admin/forms'
     | '/admin/login'
-    | '/admin/lookup'
     | '/admin/settings'
     | '/api/form-settings'
     | '/api/global-settings'
     | '/api/submissions'
+    | '/api/submissions-by-user'
     | '/form/$formId'
     | '/_pathlessLayout/_nested-layout/route-a'
     | '/_pathlessLayout/_nested-layout/route-b'
@@ -328,7 +328,6 @@ export interface FileRouteTypes {
     | '/api/admin/logout'
     | '/api/admin/refresh-auth'
     | '/api/admin/remove-form'
-    | '/api/admin/submissions-by-user'
     | '/api/admin/toggle-expiry'
     | '/api/admin/toggle-overwrite'
   fileRoutesById: FileRoutesById
@@ -336,15 +335,16 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PathlessLayoutRoute: typeof PathlessLayoutRouteWithChildren
+  LookupRoute: typeof LookupRoute
   RedirectRoute: typeof RedirectRoute
   AdminCreateRoute: typeof AdminCreateRoute
   AdminFormsRoute: typeof AdminFormsRoute
   AdminLoginRoute: typeof AdminLoginRoute
-  AdminLookupRoute: typeof AdminLookupRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   ApiFormSettingsRoute: typeof ApiFormSettingsRoute
   ApiGlobalSettingsRoute: typeof ApiGlobalSettingsRoute
   ApiSubmissionsRoute: typeof ApiSubmissionsRoute
+  ApiSubmissionsByUserRoute: typeof ApiSubmissionsByUserRoute
   FormFormIdRoute: typeof FormFormIdRoute
   ApiAdminCreateFormRoute: typeof ApiAdminCreateFormRoute
   ApiAdminEmailCsvReportRoute: typeof ApiAdminEmailCsvReportRoute
@@ -354,7 +354,6 @@ export interface RootRouteChildren {
   ApiAdminLogoutRoute: typeof ApiAdminLogoutRoute
   ApiAdminRefreshAuthRoute: typeof ApiAdminRefreshAuthRoute
   ApiAdminRemoveFormRoute: typeof ApiAdminRemoveFormRoute
-  ApiAdminSubmissionsByUserRoute: typeof ApiAdminSubmissionsByUserRoute
   ApiAdminToggleExpiryRoute: typeof ApiAdminToggleExpiryRoute
   ApiAdminToggleOverwriteRoute: typeof ApiAdminToggleOverwriteRoute
 }
@@ -366,6 +365,13 @@ declare module '@tanstack/solid-router' {
       path: '/redirect'
       fullPath: '/redirect'
       preLoaderRoute: typeof RedirectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lookup': {
+      id: '/lookup'
+      path: '/lookup'
+      fullPath: '/lookup'
+      preLoaderRoute: typeof LookupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_pathlessLayout': {
@@ -387,6 +393,13 @@ declare module '@tanstack/solid-router' {
       path: '/form/$formId'
       fullPath: '/form/$formId'
       preLoaderRoute: typeof FormFormIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/submissions-by-user': {
+      id: '/api/submissions-by-user'
+      path: '/api/submissions-by-user'
+      fullPath: '/api/submissions-by-user'
+      preLoaderRoute: typeof ApiSubmissionsByUserRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/submissions': {
@@ -415,13 +428,6 @@ declare module '@tanstack/solid-router' {
       path: '/admin/settings'
       fullPath: '/admin/settings'
       preLoaderRoute: typeof AdminSettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/lookup': {
-      id: '/admin/lookup'
-      path: '/admin/lookup'
-      fullPath: '/admin/lookup'
-      preLoaderRoute: typeof AdminLookupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/login': {
@@ -464,13 +470,6 @@ declare module '@tanstack/solid-router' {
       path: '/api/admin/toggle-expiry'
       fullPath: '/api/admin/toggle-expiry'
       preLoaderRoute: typeof ApiAdminToggleExpiryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/admin/submissions-by-user': {
-      id: '/api/admin/submissions-by-user'
-      path: '/api/admin/submissions-by-user'
-      fullPath: '/api/admin/submissions-by-user'
-      preLoaderRoute: typeof ApiAdminSubmissionsByUserRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/admin/remove-form': {
@@ -579,15 +578,16 @@ const PathlessLayoutRouteWithChildren = PathlessLayoutRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PathlessLayoutRoute: PathlessLayoutRouteWithChildren,
+  LookupRoute: LookupRoute,
   RedirectRoute: RedirectRoute,
   AdminCreateRoute: AdminCreateRoute,
   AdminFormsRoute: AdminFormsRoute,
   AdminLoginRoute: AdminLoginRoute,
-  AdminLookupRoute: AdminLookupRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   ApiFormSettingsRoute: ApiFormSettingsRoute,
   ApiGlobalSettingsRoute: ApiGlobalSettingsRoute,
   ApiSubmissionsRoute: ApiSubmissionsRoute,
+  ApiSubmissionsByUserRoute: ApiSubmissionsByUserRoute,
   FormFormIdRoute: FormFormIdRoute,
   ApiAdminCreateFormRoute: ApiAdminCreateFormRoute,
   ApiAdminEmailCsvReportRoute: ApiAdminEmailCsvReportRoute,
@@ -597,7 +597,6 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAdminLogoutRoute: ApiAdminLogoutRoute,
   ApiAdminRefreshAuthRoute: ApiAdminRefreshAuthRoute,
   ApiAdminRemoveFormRoute: ApiAdminRemoveFormRoute,
-  ApiAdminSubmissionsByUserRoute: ApiAdminSubmissionsByUserRoute,
   ApiAdminToggleExpiryRoute: ApiAdminToggleExpiryRoute,
   ApiAdminToggleOverwriteRoute: ApiAdminToggleOverwriteRoute,
 }
