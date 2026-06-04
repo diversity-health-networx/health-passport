@@ -33,10 +33,10 @@ function App() {
 
       <section class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 ">
         {[
-          ['D1 Database', 'Cloudflare edge-replicated SQLite for distributed data storage.'],
-          ['Secure Auth', 'Magic link authentication for administrators.'],
-          ['Postmark', 'Reliable email delivery for notifications.'],
-          ['UUIDv7', 'Chronologically sortable temporal identifiers.'],
+          ['Simple', 'Intuitive to use.'],
+          ['Reliable', 'Edge-replicated and distributed data storage.'],
+          ['Secure', 'Password-less admin login'],
+          ['Private', 'Account-free submissions'],
         ].map(([title, desc], index) => (
           <article
             class="island-shell feature-card rise-in rounded-2xl p-5 border border-[var(--sea-ink)]"
