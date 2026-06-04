@@ -50,5 +50,5 @@ See `src/routes/index.tsx` for an example.
     * problem: ssr is being used by createFileRoute
     * solution: add option `ssr: false` to createFileRoute initialization options object
 - env variable / secret missing
-    * problem: values fail to be used in cloud deployment but are successfully used from .env file on local dev server
-    * solution: remove variable definitions from wrangler.jsonc which causes conflicts
+    * problem: api functions dependent on secrets fail in cloud deployment but are successfully used from .env file on local dev server
+    * solution: set missing variables as `SECRET` in cloudflare dashboard
