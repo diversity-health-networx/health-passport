@@ -45,7 +45,8 @@ export async function dispatchMagicLinkEmail(
       From: from || 'security@dhnrx.com',
       To: email,
       Subject: 'Health Passport Access Authorization Key',
-      HtmlBody: `<p>Click below to authorize your device session. This secure validation token is valid for 15 minutes.</p><a href="${targetUrl}"><strong>Authorize Access</strong></a>`,
+      HtmlBody: `<p>Visit the Authorization link to authorize your device session. This link is valid for 15 minutes.</p><a href="${targetUrl}"><strong>Authorize Access</strong></a><br/><p>${targetUrl}</p>`,
+      TextBody: `Visit the Authorization link to authorize your device session. This link is valid for 15 minutes. \n {targetUrl}`,
       MessageStream: 'outbound',
     }),
   })
