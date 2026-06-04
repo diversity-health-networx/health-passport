@@ -2,6 +2,7 @@
   max-width: 40rem;
   margin: 0 auto;
   padding: 2rem 1.5rem;
+  color: #000;
 }
 
 .card {
@@ -65,7 +66,7 @@
 .input {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 2px solid #e2e8f0;
+  border: 2px solid #8f9296;
   border-radius: 0.5rem;
   font-size: 0.875rem;
   transition: all 200ms ease;
@@ -80,13 +81,16 @@
 }
 
 .input:hover:not(:focus) {
-  border-color: #cbd5e1;
+  border-color: #686868;
 }
 
 .booleanField {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+.booleanField .label {
+  margin-right: 2rem;
 }
 
 .likertOptions {
@@ -102,29 +106,63 @@
 }
 
 .radio {
-  width: 1rem;
-  height: 1rem;
+  width: 2rem;
+  height: 2rem;
   transition: all 150ms ease;
   cursor: pointer;
 }
 
+/* Custom Toggle Switch */
 .checkbox {
-  width: 1.125rem;
-  height: 1.125rem;
-  color: #4f46e5;
-  border: 2px solid #cbd5e1;
-  border-radius: 0.375rem;
-  transition: all 150ms ease;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 3.25rem;
+  height: 1.75rem;
+  background: #8b0000; /* Dark red background (Off state) */
+  border-radius: 2rem; /* Pill shape */
+  position: relative;
   cursor: pointer;
+  outline: none;
+  transition: background 300ms ease;
+  margin: 0 .25rem;
+  -webkit-margin-collapse: collapse;
+}
+
+/* Toggle Switch Handle */
+.checkbox::after {
+  content: '';
+  position: absolute;
+  top: 0.2rem;
+  left: 0.23rem;
+  width: 1.3rem;
+  height: 1.3rem;
+  background: #ffb950; /* Light orange handle (Off state) */
+  border: 1px solid #e65100; /* Deeper orange border (Off state) */
+  border-radius: 50%;
+  transition: transform 300ms ease, background 300ms ease, border-color 300ms ease;
+  box-sizing: border-box;
+}
+
+/* Optional: Focus state for accessibility */
+.checkbox:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+/* Checked (On) State */
+.checkbox:checked {
+  background: #1b5e20; /* Blue background (On state) */
+}
+
+/* Checked (On) State Handle */
+.checkbox:checked::after {
+  transform: translateX(1.5rem); /* Slide handle to the right */
+  background: #0472da; /* Light green handle (On state) */
+  border-color: #5bffc8; /* Darker green border (On state) */
 }
 
 .checkbox:hover {
-  border-color: #3c434d;
-}
-
-.checkbox:checked {
-  background: #4f46e5;
-  border-color: #4f46e5;
+  border-color: #003279;
 }
 
 /* Submit button enhancements */
@@ -160,27 +198,28 @@
 .qrButton {
   padding: 0.5rem;
   border: none;
-  background: transparent;
-  color: #3c434d;
+  background: #5590ff;
+  text-shadow: -1px 0 1px #444;
+  color: #ffffff;
   cursor: pointer;
   border-radius: 0.5rem;
   display: flex;
   align-items: center;
+  gap: 1rem;
+  border: 1px solid gray;
   justify-content: center;
   transition: all 150ms ease-out;
 }
 
 .qrButton:hover {
-  background: #f1f5f9;
-  color: #4f46e5;
-  transform: scale(1.05);
+  transform: scale(1.02);
+  background: #695eff;
 }
 
 .qrButton:focus {
   outline: 2px solid #4f46e5;
   outline-offset: 2px;
-  background: #f1f5f9;
-  color: #4f46e5;
+  background: #5590ff;
 }
 
 .qrButton:active {

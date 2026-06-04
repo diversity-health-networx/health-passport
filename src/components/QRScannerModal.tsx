@@ -14,7 +14,7 @@ export function QRScannerModal(props: QRScannerModalProps) {
   const [scanError, setScanError] = createSignal('')
   const [fileError, setFileError] = createSignal('')
   const [isScanning, setIsScanning] = createSignal(false)
-  
+
   let html5QrCodeInstance: Html5Qrcode | undefined
   let modalRef: HTMLDivElement | undefined
   const scannerContainerId = `qr-scanner-${props.fieldName}`
@@ -64,16 +64,16 @@ export function QRScannerModal(props: QRScannerModalProps) {
         }
 
         // Avoid double initialization
-        if (html5QrCodeInstance.isScanning) return 
+        if (html5QrCodeInstance.isScanning) return
 
         setIsScanning(true)
         setScanError('')
 
         await html5QrCodeInstance.start(
           { facingMode: 'environment' }, // Prefer rear camera on mobile devices
-          { 
-            fps: 10, 
-            qrbox: { width: 250, height: 250 } 
+          {
+            fps: 10,
+            qrbox: { width: 250, height: 250 }
           },
           (decodedText: string) => {
             // Success Callback
@@ -101,7 +101,7 @@ export function QRScannerModal(props: QRScannerModalProps) {
     if (!file) return
 
     setFileError('')
-    
+
     // Stop active camera scanner before uploading a file
     await stopScanner()
 
@@ -137,7 +137,7 @@ export function QRScannerModal(props: QRScannerModalProps) {
 
   return (
     <Show when={props.isOpen}>
-      <div 
+      <div
         ref={setModalRef}
         class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in"
         role="dialog"
@@ -177,8 +177,8 @@ export function QRScannerModal(props: QRScannerModalProps) {
             <h3 id="qr-modal-title" class="text-lg font-bold text-slate-900">
               QR Code Reader
             </h3>
-            <button 
-              onClick={props.onClose} 
+            <button
+              onClick={props.onClose}
               class="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-full hover:bg-slate-200/50 cursor-pointer"
               aria-label="Close modal"
             >
@@ -191,23 +191,21 @@ export function QRScannerModal(props: QRScannerModalProps) {
 
           {/* Mode Switcher */}
           <Show when={cameraAvailable()}>
-            <div class="flex border-b border-slate-100 p-2 gap-1 bg-slate-50/50">
+            <div class="flex p-1.5 gap-1 bg-slate-100 border-b border-slate-200">
               <button
-                class={`flex-1 py-2 px-3 text-sm font-medium rounded-md transition-all cursor-pointer ${
-                  scanMode() === 'camera' 
-                    ? 'bg-white text-indigo-600 shadow-sm border border-slate-200/60' 
-                    : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
-                }`}
+                class={`flex-1 py-2 px-3 text-sm font-semibold rounded-md transition-all duration-200 cursor-pointer ${scanMode() === 'camera'
+                    ? 'bg-indigo-600 text-white shadow-md ring-1 ring-indigo-700'
+                    : 'bg-gray-300 text-slate-700 border border-gray-400 hover:text-slate-900 hover:bg-slate-200/60'
+                  }`}
                 onClick={() => setScanMode('camera')}
               >
                 Use Camera Viewport
               </button>
               <button
-                class={`flex-1 py-2 px-3 text-sm font-medium rounded-md transition-all cursor-pointer ${
-                  scanMode() === 'upload' 
-                    ? 'bg-white text-indigo-600 shadow-sm border border-slate-200/60' 
-                    : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
-                }`}
+                class={`flex-1 py-2 px-3 text-sm font-semibold rounded-md transition-all duration-200 cursor-pointer ${scanMode() === 'upload'
+                    ? 'bg-indigo-600 text-white shadow-md ring-1 ring-indigo-700'
+                    : 'bg-gray-300 text-slate-700 border border-gray-400 hover:text-slate-900 hover:bg-slate-200/60'
+                  }`}
                 onClick={() => setScanMode('upload')}
               >
                 Upload Photo File
@@ -223,7 +221,7 @@ export function QRScannerModal(props: QRScannerModalProps) {
                 <div class="w-full max-w-[280px] aspect-square relative rounded-lg overflow-hidden border-2 border-slate-200 bg-slate-950">
                   {/* Scanner element */}
                   <div id={scannerContainerId} class="w-full h-full object-cover"></div>
-                  
+
                   {/* Loading overlay */}
                   <Show when={!isScanning() && !scanError()}>
                     <div class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/80 text-white p-4 text-center">
@@ -239,7 +237,7 @@ export function QRScannerModal(props: QRScannerModalProps) {
                     </div>
                   </Show>
                 </div>
-                
+
                 <Show when={scanError()}>
                   <p class="text-red-600 text-sm mt-3 text-center" role="alert">
                     {scanError()}
@@ -250,8 +248,8 @@ export function QRScannerModal(props: QRScannerModalProps) {
               {/* Upload Static Photo Handler */}
               <Match when={scanMode() === 'upload' || !cameraAvailable()}>
                 <div class="w-full flex flex-col items-center">
-                  <label 
-                    for="qr-image-input" 
+                  <label
+                    for="qr-image-input"
                     class="w-full max-w-[280px] aspect-square border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center p-4 bg-slate-50 hover:bg-slate-100/50 cursor-pointer transition-colors"
                   >
                     <svg class="mx-auto h-12 w-12 text-slate-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
@@ -264,12 +262,12 @@ export function QRScannerModal(props: QRScannerModalProps) {
                       PNG, JPG, or WebP up to 10MB
                     </span>
                   </label>
-                  
-                  <input 
+
+                  <input
                     id="qr-image-input"
-                    type="file" 
-                    accept="image/*" 
-                    class="hidden" 
+                    type="file"
+                    accept="image/*"
+                    class="hidden"
                     onChange={handleFileChange}
                   />
 
@@ -288,8 +286,8 @@ export function QRScannerModal(props: QRScannerModalProps) {
 
           {/* Footer controls */}
           <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-end">
-            <button 
-              onClick={props.onClose} 
+            <button
+              onClick={props.onClose}
               class="px-4 py-2 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 font-medium rounded-lg text-sm transition-colors cursor-pointer"
             >
               Cancel

@@ -189,6 +189,7 @@ export function PublicFormView(props: PublicFormViewProps) {
                   aria-label="Scan QR code for User ID"
                   class={styles.qrButton}
                 >
+                  Scan QR
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="3" width="7" height="7" />
                     <rect x="14" y="3" width="7" height="7" />
@@ -236,6 +237,7 @@ export function PublicFormView(props: PublicFormViewProps) {
                                   aria-label={`Scan QR code for ${field.displayLabel}`}
                                   class={styles.qrButton}
                                 >
+                                  Scan QR
                                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="3" y="3" width="7" height="7" />
                                     <rect x="14" y="3" width="7" height="7" />
@@ -326,13 +328,16 @@ export function PublicFormView(props: PublicFormViewProps) {
                               {field.displayLabel}
                               {field.metaSettings.required && <span class={styles.required}>*</span>}
                             </label>
+                            <p>No</p>
                             <input
                               id={field.machineSlug}
                               type="checkbox"
-                              checked={fieldApi().state.value ? true : false}
+                              /* Updated checked logic below */
+                              checked={fieldApi().state.value === 'true'}
                               onChange={(e) => fieldApi().handleChange(e.target.checked ? 'true' : 'false')}
                               class={styles.checkbox}
                             />
+                            <p>Yes</p>
                           </div>
                         )
 
