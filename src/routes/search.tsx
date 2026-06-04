@@ -57,7 +57,7 @@ function UserSubmissionCrossLookup() {
           type="button"
           onClick={() => openQrScanner('userId')}
           aria-label="Scan QR code for User ID"
-          class="p-2 border-1 bg-slate-900 text-[#3c434d] cursor-pointer rounded-lg flex items-center justify-center transition-all duration-150 ease-out hover:bg-slate-800 hover:text-indigo-600 hover:scale-105 focus:outline focus:outline-2 focus:outline-indigo-600 focus:outline-offset-2 focus:bg-slate-100 focus:text-indigo-600 active:scale-95"
+          class="p-2 border-1 bg-slate-900 text-[#3c434d] cursor-pointer rounded flex items-center justify-center transition-all duration-150 ease-out hover:bg-slate-800 hover:text-indigo-600 hover:scale-105 focus:outline focus:outline-2 focus:outline-indigo-600 focus:outline-offset-2 focus:bg-slate-100 focus:text-indigo-600 active:scale-95"
         >
           <span class="mx-2 text-white">Scan</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
