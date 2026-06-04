@@ -3,7 +3,7 @@ import { env } from 'cloudflare:workers'
 import { SubmissionRow } from '~/types/tables'
 
 // Get form submissions - GET /api/admin/form-submissions
-export const Route = createFileRoute('/api/form-submission')({
+export const Route = createFileRoute('/api/admin/form-submissions')({
     server: {
         handlers: {
             GET: async ({ request }) => {

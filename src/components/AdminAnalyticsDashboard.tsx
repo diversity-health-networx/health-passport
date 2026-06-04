@@ -1,9 +1,10 @@
 import { createSignal, For, Show } from 'solid-js'
-import { createQuery, useQueryClient } from '@tanstack/solid-query'
+import { createQuery } from '@tanstack/solid-query'
 import { extractTimestampFromUUIDv7 } from '../utils/uuid'
 import type { DynamicFormSchema } from '~/types/form'
-import styles from './Admin.module.css'
 import { SubmissionRow } from '~/types/tables'
+import { queryClient } from '~/routes/__root'
+import styles from './Admin.module.css'
 
 interface AdminAnalyticsDashboardProps {
   form: DynamicFormSchema & { questions_json?: string }
@@ -13,19 +14,24 @@ export function AdminAnalyticsDashboard(props: AdminAnalyticsDashboardProps) {
   const [selectedSubmission, setSelectedSubmission] = createSignal<any>(null)
   const [allowOverwriteToggle, setAllowOverwriteToggle] = createSignal(props.form.allowOverwrite ? true : false)
   const [expiryDate, setExpiryDate] = createSignal(
-    props.form.submissionsExpiry 
-      ? new Date(props.form.submissionsExpiry * 1000).toISOString().slice(0, 16) 
+    props.form.submissionsExpiry
+      ? new Date(props.form.submissionsExpiry * 1000).toISOString().slice(0, 16)
       : ''
   )
-  const queryClient = useQueryClient()
 
   const submissionsQuery = createQuery(() => ({
+    // Wrapping the dynamic parameter ensures SolidJS registers a reactive dependency on props.form.id
     queryKey: ['submissions', props.form.id],
     queryFn: async () => {
-      const response = await fetch(`/api/admin/form-submissions?form_id=${props.form.id}`)
+      // Solid tracks this access reactively inside the query function execution context
+      const formId = props.form.id
+      if (!formId) return []
+
+      const response = await fetch(`/api/admin/form-submissions?form_id=${encodeURIComponent(formId)}`)
       if (!response.ok) throw new Error('Failed to fetch submissions')
       return response.json() as Promise<SubmissionRow[]>
     },
+    queryClient,
   }))
 
   const compileAndDownloadCSV = () => {
@@ -96,10 +102,10 @@ export function AdminAnalyticsDashboard(props: AdminAnalyticsDashboardProps) {
         </div>
         <div class={styles.actions}>
           <button onClick={compileAndDownloadCSV} class={`${styles.btn} ${styles.btnDark}`}>
-            Download CSV
+            Download
           </button>
           <button onClick={dispatchCSVViaPostmark} class={`${styles.btn} ${styles.btnPrimary}`}>
-            Email Export
+            Email
           </button>
         </div>
       </div>
@@ -168,7 +174,7 @@ export function AdminAnalyticsDashboard(props: AdminAnalyticsDashboardProps) {
                       {new Date(extractTimestampFromUUIDv7(row.id) * 1000).toLocaleString()}
                     </td>
                     <td class={styles.td}>
-                      <button class={styles.inspectBtn}>Inspect Details</button>
+                      <button class={styles.inspectBtn}>Inspect</button>
                     </td>
                   </tr>
                 )}
@@ -186,7 +192,7 @@ export function AdminAnalyticsDashboard(props: AdminAnalyticsDashboardProps) {
                 <span class={styles.monoBox}>{selectedSubmission().id}</span>
               </div>
               <div>
-                <span class={styles.fieldLabel}>User Association Variable</span>
+                <span class={styles.fieldLabel}>User Id</span>
                 <span class={styles.fieldValue}>{selectedSubmission().user_id}</span>
               </div>
               <div>

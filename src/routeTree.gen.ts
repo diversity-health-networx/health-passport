@@ -15,7 +15,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as FormFormIdRouteImport } from './routes/form.$formId'
 import { Route as ApiSubmissionsRouteImport } from './routes/api/submissions'
 import { Route as ApiGlobalSettingsRouteImport } from './routes/api/global-settings'
-import { Route as ApiFormSubmissionRouteImport } from './routes/api/form-submission'
 import { Route as ApiFormSettingsRouteImport } from './routes/api/form-settings'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminLookupRouteImport } from './routes/admin.lookup'
@@ -31,6 +30,7 @@ import { Route as ApiAdminRefreshAuthRouteImport } from './routes/api/admin/refr
 import { Route as ApiAdminLogoutRouteImport } from './routes/api/admin/logout'
 import { Route as ApiAdminLoginRouteImport } from './routes/api/admin/login'
 import { Route as ApiAdminGetAllFormsRouteImport } from './routes/api/admin/get-all-forms'
+import { Route as ApiAdminFormSubmissionsRouteImport } from './routes/api/admin/form-submissions'
 import { Route as ApiAdminEmailCsvReportRouteImport } from './routes/api/admin/email-csv-report'
 import { Route as ApiAdminCreateFormRouteImport } from './routes/api/admin/create-form'
 import { Route as PathlessLayoutNestedLayoutRouteBRouteImport } from './routes/_pathlessLayout/_nested-layout/route-b'
@@ -63,11 +63,6 @@ const ApiSubmissionsRoute = ApiSubmissionsRouteImport.update({
 const ApiGlobalSettingsRoute = ApiGlobalSettingsRouteImport.update({
   id: '/api/global-settings',
   path: '/api/global-settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiFormSubmissionRoute = ApiFormSubmissionRouteImport.update({
-  id: '/api/form-submission',
-  path: '/api/form-submission',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiFormSettingsRoute = ApiFormSettingsRouteImport.update({
@@ -146,6 +141,11 @@ const ApiAdminGetAllFormsRoute = ApiAdminGetAllFormsRouteImport.update({
   path: '/api/admin/get-all-forms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAdminFormSubmissionsRoute = ApiAdminFormSubmissionsRouteImport.update({
+  id: '/api/admin/form-submissions',
+  path: '/api/admin/form-submissions',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAdminEmailCsvReportRoute = ApiAdminEmailCsvReportRouteImport.update({
   id: '/api/admin/email-csv-report',
   path: '/api/admin/email-csv-report',
@@ -178,7 +178,6 @@ export interface FileRoutesByFullPath {
   '/admin/lookup': typeof AdminLookupRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/api/form-settings': typeof ApiFormSettingsRoute
-  '/api/form-submission': typeof ApiFormSubmissionRoute
   '/api/global-settings': typeof ApiGlobalSettingsRoute
   '/api/submissions': typeof ApiSubmissionsRoute
   '/form/$formId': typeof FormFormIdRoute
@@ -186,6 +185,7 @@ export interface FileRoutesByFullPath {
   '/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
   '/api/admin/create-form': typeof ApiAdminCreateFormRoute
   '/api/admin/email-csv-report': typeof ApiAdminEmailCsvReportRoute
+  '/api/admin/form-submissions': typeof ApiAdminFormSubmissionsRoute
   '/api/admin/get-all-forms': typeof ApiAdminGetAllFormsRoute
   '/api/admin/login': typeof ApiAdminLoginRoute
   '/api/admin/logout': typeof ApiAdminLogoutRoute
@@ -204,7 +204,6 @@ export interface FileRoutesByTo {
   '/admin/lookup': typeof AdminLookupRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/api/form-settings': typeof ApiFormSettingsRoute
-  '/api/form-submission': typeof ApiFormSubmissionRoute
   '/api/global-settings': typeof ApiGlobalSettingsRoute
   '/api/submissions': typeof ApiSubmissionsRoute
   '/form/$formId': typeof FormFormIdRoute
@@ -212,6 +211,7 @@ export interface FileRoutesByTo {
   '/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
   '/api/admin/create-form': typeof ApiAdminCreateFormRoute
   '/api/admin/email-csv-report': typeof ApiAdminEmailCsvReportRoute
+  '/api/admin/form-submissions': typeof ApiAdminFormSubmissionsRoute
   '/api/admin/get-all-forms': typeof ApiAdminGetAllFormsRoute
   '/api/admin/login': typeof ApiAdminLoginRoute
   '/api/admin/logout': typeof ApiAdminLogoutRoute
@@ -233,7 +233,6 @@ export interface FileRoutesById {
   '/admin/lookup': typeof AdminLookupRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/api/form-settings': typeof ApiFormSettingsRoute
-  '/api/form-submission': typeof ApiFormSubmissionRoute
   '/api/global-settings': typeof ApiGlobalSettingsRoute
   '/api/submissions': typeof ApiSubmissionsRoute
   '/form/$formId': typeof FormFormIdRoute
@@ -241,6 +240,7 @@ export interface FileRoutesById {
   '/_pathlessLayout/_nested-layout/route-b': typeof PathlessLayoutNestedLayoutRouteBRoute
   '/api/admin/create-form': typeof ApiAdminCreateFormRoute
   '/api/admin/email-csv-report': typeof ApiAdminEmailCsvReportRoute
+  '/api/admin/form-submissions': typeof ApiAdminFormSubmissionsRoute
   '/api/admin/get-all-forms': typeof ApiAdminGetAllFormsRoute
   '/api/admin/login': typeof ApiAdminLoginRoute
   '/api/admin/logout': typeof ApiAdminLogoutRoute
@@ -261,7 +261,6 @@ export interface FileRouteTypes {
     | '/admin/lookup'
     | '/admin/settings'
     | '/api/form-settings'
-    | '/api/form-submission'
     | '/api/global-settings'
     | '/api/submissions'
     | '/form/$formId'
@@ -269,6 +268,7 @@ export interface FileRouteTypes {
     | '/route-b'
     | '/api/admin/create-form'
     | '/api/admin/email-csv-report'
+    | '/api/admin/form-submissions'
     | '/api/admin/get-all-forms'
     | '/api/admin/login'
     | '/api/admin/logout'
@@ -287,7 +287,6 @@ export interface FileRouteTypes {
     | '/admin/lookup'
     | '/admin/settings'
     | '/api/form-settings'
-    | '/api/form-submission'
     | '/api/global-settings'
     | '/api/submissions'
     | '/form/$formId'
@@ -295,6 +294,7 @@ export interface FileRouteTypes {
     | '/route-b'
     | '/api/admin/create-form'
     | '/api/admin/email-csv-report'
+    | '/api/admin/form-submissions'
     | '/api/admin/get-all-forms'
     | '/api/admin/login'
     | '/api/admin/logout'
@@ -315,7 +315,6 @@ export interface FileRouteTypes {
     | '/admin/lookup'
     | '/admin/settings'
     | '/api/form-settings'
-    | '/api/form-submission'
     | '/api/global-settings'
     | '/api/submissions'
     | '/form/$formId'
@@ -323,6 +322,7 @@ export interface FileRouteTypes {
     | '/_pathlessLayout/_nested-layout/route-b'
     | '/api/admin/create-form'
     | '/api/admin/email-csv-report'
+    | '/api/admin/form-submissions'
     | '/api/admin/get-all-forms'
     | '/api/admin/login'
     | '/api/admin/logout'
@@ -343,12 +343,12 @@ export interface RootRouteChildren {
   AdminLookupRoute: typeof AdminLookupRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   ApiFormSettingsRoute: typeof ApiFormSettingsRoute
-  ApiFormSubmissionRoute: typeof ApiFormSubmissionRoute
   ApiGlobalSettingsRoute: typeof ApiGlobalSettingsRoute
   ApiSubmissionsRoute: typeof ApiSubmissionsRoute
   FormFormIdRoute: typeof FormFormIdRoute
   ApiAdminCreateFormRoute: typeof ApiAdminCreateFormRoute
   ApiAdminEmailCsvReportRoute: typeof ApiAdminEmailCsvReportRoute
+  ApiAdminFormSubmissionsRoute: typeof ApiAdminFormSubmissionsRoute
   ApiAdminGetAllFormsRoute: typeof ApiAdminGetAllFormsRoute
   ApiAdminLoginRoute: typeof ApiAdminLoginRoute
   ApiAdminLogoutRoute: typeof ApiAdminLogoutRoute
@@ -401,13 +401,6 @@ declare module '@tanstack/solid-router' {
       path: '/api/global-settings'
       fullPath: '/api/global-settings'
       preLoaderRoute: typeof ApiGlobalSettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/form-submission': {
-      id: '/api/form-submission'
-      path: '/api/form-submission'
-      fullPath: '/api/form-submission'
-      preLoaderRoute: typeof ApiFormSubmissionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/form-settings': {
@@ -515,6 +508,13 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof ApiAdminGetAllFormsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/admin/form-submissions': {
+      id: '/api/admin/form-submissions'
+      path: '/api/admin/form-submissions'
+      fullPath: '/api/admin/form-submissions'
+      preLoaderRoute: typeof ApiAdminFormSubmissionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/admin/email-csv-report': {
       id: '/api/admin/email-csv-report'
       path: '/api/admin/email-csv-report'
@@ -586,12 +586,12 @@ const rootRouteChildren: RootRouteChildren = {
   AdminLookupRoute: AdminLookupRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   ApiFormSettingsRoute: ApiFormSettingsRoute,
-  ApiFormSubmissionRoute: ApiFormSubmissionRoute,
   ApiGlobalSettingsRoute: ApiGlobalSettingsRoute,
   ApiSubmissionsRoute: ApiSubmissionsRoute,
   FormFormIdRoute: FormFormIdRoute,
   ApiAdminCreateFormRoute: ApiAdminCreateFormRoute,
   ApiAdminEmailCsvReportRoute: ApiAdminEmailCsvReportRoute,
+  ApiAdminFormSubmissionsRoute: ApiAdminFormSubmissionsRoute,
   ApiAdminGetAllFormsRoute: ApiAdminGetAllFormsRoute,
   ApiAdminLoginRoute: ApiAdminLoginRoute,
   ApiAdminLogoutRoute: ApiAdminLogoutRoute,
