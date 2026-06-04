@@ -6,6 +6,7 @@ import { SubmissionRow } from '~/types/tables'
 import { queryClient } from '~/routes/__root'
 import styles from './Admin.module.css'
 import { compileCSV, nameCSV } from '~/utils/csv'
+import { Link } from '@tanstack/solid-router'
 
 interface AdminAnalyticsDashboardProps {
   form: DynamicFormSchema & { questions_json?: string }
@@ -100,6 +101,9 @@ export function AdminAnalyticsDashboard(props: AdminAnalyticsDashboardProps) {
           <button onClick={emailCSV} class={`${styles.btn} ${styles.btnPrimary}`}>
             Email
           </button>
+          <Link to='/form/$formId' params={{formId: props.form.id}} search={{view: undefined}} class={`${styles.btn} ${styles.btnPrimary}`}>
+            Open
+          </Link>
         </div>
       </div>
 
