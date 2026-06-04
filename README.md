@@ -41,3 +41,14 @@ import { env } from 'cloudflare:workers'
 ```
 
 See `src/routes/index.tsx` for an example.
+
+## Common Build and Deployment Errors
+- Requests dependent on secrets / env vars failing (magic link login request)
+    * problem: inconcistent inclusion of environment variables
+    * solution: run `pnpx wrangler secret list` to check if required .env vars are available in cloud deployment
+- rendering error not showing in browser console or terminal
+    * problem: ssr is being used by createFileRoute
+    * solution: add option `ssr: false` to createFileRoute initialization options object
+- env variable / secret missing
+    * problem: values fail to be used in cloud deployment but are successfully used from .env file on local dev server
+    * solution: remove variable definitions from wrangler.jsonc which causes conflicts
