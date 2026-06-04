@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/solid-router'
 import { env } from 'cloudflare:workers'
-import { SubmissionRow } from '~/types/tables'
+import { FormRow, SubmissionRow } from '~/types/tables'
+import { compileCSV, nameCSV } from '~/utils/csv'
 
 // Email CSV report - POST /api/admin/email-csv-report
 export const Route = createFileRoute('/api/admin/email-csv-report')({
@@ -22,51 +23,25 @@ export const Route = createFileRoute('/api/admin/email-csv-report')({
                 const formRecord = await db
                     .prepare('SELECT name, questions_json FROM forms WHERE id = ?')
                     .bind(formId)
-                    .first<{ name: string; questions_json: string }>()
+                    .first<Pick<FormRow,'name' | 'questions_json'>>()
 
                 if (!formRecord) {
                     return Response.json({ error: 'Requested form not found' }, { status: 404 })
                 }
-
-                const parsedFields = JSON.parse(formRecord.questions_json || '[]')
-                const headers = [
-                    'Submission UUIDv7',
-                    'User ID',
-                    'Decoded Timestamp',
-                    ...parsedFields.map((f: any) => `"${(f.displayLabel || 'Untitled Question').replace(/"/g, '""')}"`),
-                ]
 
                 // 2. Fetch all submissions matching the form_id
                 const submissionsData = await db
                     .prepare('SELECT * FROM submissions WHERE form_id = ? ORDER BY submitted_at DESC')
                     .bind(formId)
                     .all<SubmissionRow>()
-                const records = submissionsData.results || []
+                const submissions = submissionsData.results || []
 
-                if (records.length === 0) {
+                if (submissions.length === 0) {
                     return Response.json({ error: 'No submissions found to export' }, { status: 400 })
                 }
 
                 // 3. Compile the CSV string payload
-                const rowMatrix = [headers.join(',')]
-                for (const record of records) {
-                    const responses = JSON.parse(record.answers_json || '{}')
-                    const timeString = new Date(record.submitted_at * 1000).toISOString()
-
-                    const matchingRow = [
-                        `"${record.id}"`,
-                        `"${record.user_id}"`,
-                        `"${timeString}"`,
-                        // 4. We strictly use the unique machineSlug to pull the correct answer from the JSON, 
-                        // but the slug itself is never printed in the CSV output.
-                        ...parsedFields.map(
-                            (f: any) => `"${String(responses[f.machineSlug] ?? '').replace(/"/g, '""')}"`
-                        ),
-                    ]
-                    rowMatrix.push(matchingRow.join(','))
-                }
-
-                const csvString = rowMatrix.join('\n')
+                const csvString = compileCSV(JSON.parse(formRecord.questions_json),submissions)
                 const encoder = new TextEncoder()
                 const csvBase64 = btoa(String.fromCharCode(...encoder.encode(csvString)))
 
@@ -91,7 +66,7 @@ export const Route = createFileRoute('/api/admin/email-csv-report')({
                         MessageStream: 'outbound',
                         Attachments: [
                             {
-                                Name: `submissions_${formRecord.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.csv`,
+                                Name: nameCSV(formRecord.name),
                                 Content: csvBase64,
                                 ContentType: 'text/csv',
                             },

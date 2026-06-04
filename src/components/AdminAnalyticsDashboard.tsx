@@ -1,10 +1,11 @@
 import { createSignal, For, Show } from 'solid-js'
 import { createQuery } from '@tanstack/solid-query'
 import { extractTimestampFromUUIDv7 } from '../utils/uuid'
-import type { DynamicFormSchema } from '~/types/form'
+import type { DynamicFormSchema, FormField } from '~/types/form'
 import { SubmissionRow } from '~/types/tables'
 import { queryClient } from '~/routes/__root'
 import styles from './Admin.module.css'
+import { compileCSV, nameCSV } from '~/utils/csv'
 
 interface AdminAnalyticsDashboardProps {
   form: DynamicFormSchema & { questions_json?: string }
@@ -36,40 +37,19 @@ export function AdminAnalyticsDashboard(props: AdminAnalyticsDashboardProps) {
   }))
 
   const compileAndDownloadCSV = () => {
-    const records = submissionsQuery.data
-    if (!records || records.length === 0) return alert('Dataset empty.')
+    const submissions = submissionsQuery.data
+    if (!submissions || submissions.length === 0) return alert('Dataset empty.')
 
-    const parsedFields = props.form.questions_json ? JSON.parse(props.form.questions_json) : props.form.fieldCollection
+    const formJSON = props.form.questions_json
+    const formFields: FormField[] = formJSON ? JSON.parse(formJSON) : props.form.fieldCollection;
     
-    // 1. Map the header values strictly to the question text (displayLabel).
-    // We wrap each header item in quotes and escape internal quotes to prevent commas in questions from breaking layout.
-    const headers = [
-      'Submission UUIDv7', 
-      'User ID', 
-      'Timestamp', 
-      ...(parsedFields as any[]).map((f: any) => `"${(f.displayLabel || 'Untitled Question').replace(/"/g, '""')}"`)
-    ]
+    const csvString = compileCSV(formFields, submissions);
 
-    const rowMatrix = [headers.join(',')]
-    for (const record of records) {
-      const responses = JSON.parse(record.answers_json || '{}')
-      const timeString = new Date(extractTimestampFromUUIDv7(record.id) * 1000).toISOString()
-      
-      const matchingRow = [
-        `"${record.id}"`,
-        `"${record.user_id}"`,
-        `"${timeString}"`,
-        // 2. Look up data utilizing the unique machineSlug, even though the slug itself is excluded from headers
-        ...(parsedFields as any[]).map((f: any) => `"${String(responses[f.machineSlug] ?? '').replace(/"/g, '""')}"`),
-      ]
-      rowMatrix.push(matchingRow.join(','))
-    }
-
-    const dataBlob = new Blob([rowMatrix.join('\n')], { type: 'text/csv;charset=utf-8;' })
+    const dataBlob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' })
     const localUrl = URL.createObjectURL(dataBlob)
     const hiddenLink = document.createElement('a')
     hiddenLink.href = localUrl
-    hiddenLink.setAttribute('download', `submissions_${props.form.formName}_export.csv`)
+    hiddenLink.setAttribute('download', nameCSV(props.form.formName))
     document.body.appendChild(hiddenLink)
     hiddenLink.click()
     document.body.removeChild(hiddenLink)
