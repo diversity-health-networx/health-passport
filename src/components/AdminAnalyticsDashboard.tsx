@@ -69,7 +69,7 @@ export function AdminAnalyticsDashboard(props: AdminAnalyticsDashboardProps) {
     const localUrl = URL.createObjectURL(dataBlob)
     const hiddenLink = document.createElement('a')
     hiddenLink.href = localUrl
-    hiddenLink.setAttribute('download', `analytics_${props.form.formName}_export.csv`)
+    hiddenLink.setAttribute('download', `submissions_${props.form.formName}_export.csv`)
     document.body.appendChild(hiddenLink)
     hiddenLink.click()
     document.body.removeChild(hiddenLink)

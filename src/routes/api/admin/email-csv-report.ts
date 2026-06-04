@@ -91,7 +91,7 @@ export const Route = createFileRoute('/api/admin/email-csv-report')({
                         MessageStream: 'outbound',
                         Attachments: [
                             {
-                                Name: `export_${formRecord.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.csv`,
+                                Name: `submissions_${formRecord.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.csv`,
                                 Content: csvBase64,
                                 ContentType: 'text/csv',
                             },
