@@ -5,7 +5,7 @@ interface QRScannerModalProps {
   isOpen: boolean
   onClose: () => void
   onScan: (result: string) => void
-  fieldName: string
+  fieldName?: string
 }
 
 export function QRScannerModal(props: QRScannerModalProps) {
