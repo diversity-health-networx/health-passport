@@ -12,7 +12,7 @@ export const Route = createFileRoute('/submission/$submissionId')({
   ssr: false,
 })
 
-export default function SubmissionPage() {
+function SubmissionPage() {
   const params = useParams({ from: "/submission/$submissionId" })
   const [isLoading, setIsLoading] = createSignal(false)
   const [error, setError] = createSignal('')
