@@ -98,8 +98,9 @@ export function AdminAnalyticsDashboard(props: AdminAnalyticsDashboardProps) {
     <div class={styles.container}>
       <div class={styles.header}>
         <div>
-          <h1 class={styles.title}>Form Metrics: {props.form.formName}</h1>
-          <p class={styles.uuid}>UUIDv7 Handle: {props.form.id}</p>
+          <h1 class={styles.title}>Submissions: {props.form.formName}</h1>
+          <p class={styles.uuid}>Form ID: {props.form.id}</p>
+          <p class={styles.uuid}>Total - {submissionsQuery.data?.length} records</p>
         </div>
         <div class={styles.actions}>
           <button onClick={compileAndDownloadCSV} class={`${styles.btn} ${styles.btnDark}`}>
@@ -159,9 +160,9 @@ export function AdminAnalyticsDashboard(props: AdminAnalyticsDashboardProps) {
           <table class={styles.table}>
             <thead class={styles.tableHeader}>
               <tr>
-                <th class={styles.th}>User Token Identifier</th>
-                <th class={styles.th}>Decoded Creation Time</th>
-                <th class={styles.th}>Actions</th>
+                <th class={styles.th}>User ID</th>
+                <th class={styles.th}>Time</th>
+                <th class={styles.th}>Action</th>
               </tr>
             </thead>
             <tbody class={styles.tbody}>
@@ -195,6 +196,27 @@ export function AdminAnalyticsDashboard(props: AdminAnalyticsDashboardProps) {
               <div>
                 <span class={styles.fieldLabel}>User Id</span>
                 <span class={styles.fieldValue}>{selectedSubmission().user_id}</span>
+              </div>
+              <div class={styles.formResponse}>
+                <span class={styles.fieldLabel}>Form Responses</span>
+                <div class="space-y-4 mt-3">
+                  <For each={Object.entries(JSON.parse(selectedSubmission().answers_json || '{}'))}>
+                    {([slug, value]) => {
+                      const field = props.form.fieldCollection.find(f => f.machineSlug === slug)
+                      const label = field?.displayLabel || slug
+                      return (
+                        <div class="space-y-1">
+                          <label class="block text-sm font-medium text-slate-700">
+                            {label}
+                          </label>
+                          <div class="w-full border border-slate-300 rounded px-3 py-2 text-sm bg-slate-50 text-slate-900 min-h-[38px] flex items-center">
+                            {value !== undefined && value !== '' ? String(value) : <span class="text-slate-400 italic">No response</span>}
+                          </div>
+                        </div>
+                      )
+                    }}
+                  </For>
+                </div>
               </div>
               <div>
                 <div class={styles.mappingHeader} onClick={() => setIsMappingExpanded(!isMappingExpanded())}>
