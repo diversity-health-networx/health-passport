@@ -322,6 +322,10 @@ export function PublicFormView(props: PublicFormViewProps) {
                       case 'boolean':
                         return (
                           <div class={styles.booleanField}>
+                            <label for={field.machineSlug} class={styles.label}>
+                              {field.displayLabel}
+                              {field.metaSettings.required && <span class={styles.required}>*</span>}
+                            </label>
                             <input
                               id={field.machineSlug}
                               type="checkbox"
@@ -329,10 +333,6 @@ export function PublicFormView(props: PublicFormViewProps) {
                               onChange={(e) => fieldApi().handleChange(e.target.checked ? 'true' : 'false')}
                               class={styles.checkbox}
                             />
-                            <label for={field.machineSlug} class={styles.label}>
-                              {field.displayLabel}
-                              {field.metaSettings.required && <span class={styles.required}>*</span>}
-                            </label>
                           </div>
                         )
 
