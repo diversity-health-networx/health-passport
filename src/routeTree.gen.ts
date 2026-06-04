@@ -9,8 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as RedirectRouteImport } from './routes/redirect'
-import { Route as LookupRouteImport } from './routes/lookup'
 import { Route as PathlessLayoutRouteImport } from './routes/_pathlessLayout'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as FormFormIdRouteImport } from './routes/form.$formId'
@@ -36,14 +36,14 @@ import { Route as ApiAdminCreateFormRouteImport } from './routes/api/admin/creat
 import { Route as PathlessLayoutNestedLayoutRouteBRouteImport } from './routes/_pathlessLayout/_nested-layout/route-b'
 import { Route as PathlessLayoutNestedLayoutRouteARouteImport } from './routes/_pathlessLayout/_nested-layout/route-a'
 
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RedirectRoute = RedirectRouteImport.update({
   id: '/redirect',
   path: '/redirect',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LookupRoute = LookupRouteImport.update({
-  id: '/lookup',
-  path: '/lookup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PathlessLayoutRoute = PathlessLayoutRouteImport.update({
@@ -170,8 +170,8 @@ const PathlessLayoutNestedLayoutRouteARoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/lookup': typeof LookupRoute
   '/redirect': typeof RedirectRoute
+  '/search': typeof SearchRoute
   '/admin/create': typeof AdminCreateRoute
   '/admin/forms': typeof AdminFormsRoute
   '/admin/login': typeof AdminLoginRoute
@@ -196,8 +196,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/lookup': typeof LookupRoute
   '/redirect': typeof RedirectRoute
+  '/search': typeof SearchRoute
   '/admin/create': typeof AdminCreateRoute
   '/admin/forms': typeof AdminFormsRoute
   '/admin/login': typeof AdminLoginRoute
@@ -224,8 +224,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_pathlessLayout': typeof PathlessLayoutRouteWithChildren
-  '/lookup': typeof LookupRoute
   '/redirect': typeof RedirectRoute
+  '/search': typeof SearchRoute
   '/_pathlessLayout/_nested-layout': typeof PathlessLayoutNestedLayoutRouteWithChildren
   '/admin/create': typeof AdminCreateRoute
   '/admin/forms': typeof AdminFormsRoute
@@ -253,8 +253,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/lookup'
     | '/redirect'
+    | '/search'
     | '/admin/create'
     | '/admin/forms'
     | '/admin/login'
@@ -279,8 +279,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/lookup'
     | '/redirect'
+    | '/search'
     | '/admin/create'
     | '/admin/forms'
     | '/admin/login'
@@ -306,8 +306,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_pathlessLayout'
-    | '/lookup'
     | '/redirect'
+    | '/search'
     | '/_pathlessLayout/_nested-layout'
     | '/admin/create'
     | '/admin/forms'
@@ -335,8 +335,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PathlessLayoutRoute: typeof PathlessLayoutRouteWithChildren
-  LookupRoute: typeof LookupRoute
   RedirectRoute: typeof RedirectRoute
+  SearchRoute: typeof SearchRoute
   AdminCreateRoute: typeof AdminCreateRoute
   AdminFormsRoute: typeof AdminFormsRoute
   AdminLoginRoute: typeof AdminLoginRoute
@@ -360,18 +360,18 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/solid-router' {
   interface FileRoutesByPath {
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/redirect': {
       id: '/redirect'
       path: '/redirect'
       fullPath: '/redirect'
       preLoaderRoute: typeof RedirectRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/lookup': {
-      id: '/lookup'
-      path: '/lookup'
-      fullPath: '/lookup'
-      preLoaderRoute: typeof LookupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_pathlessLayout': {
@@ -578,8 +578,8 @@ const PathlessLayoutRouteWithChildren = PathlessLayoutRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PathlessLayoutRoute: PathlessLayoutRouteWithChildren,
-  LookupRoute: LookupRoute,
   RedirectRoute: RedirectRoute,
+  SearchRoute: SearchRoute,
   AdminCreateRoute: AdminCreateRoute,
   AdminFormsRoute: AdminFormsRoute,
   AdminLoginRoute: AdminLoginRoute,

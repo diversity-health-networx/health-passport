@@ -4,7 +4,7 @@ import { createQuery } from '@tanstack/solid-query'
 import { extractTimestampFromUUIDv7 } from '../utils/uuid'
 import { QRScannerModal } from '~/components/QRScannerModal'
 
-export const Route = createFileRoute('/lookup')({
+export const Route = createFileRoute('/search')({
   component: UserSubmissionCrossLookup,
 })
 
@@ -40,8 +40,8 @@ function UserSubmissionCrossLookup() {
   return (
     <div class="max-w-6xl mx-auto p-8">
       <div class="mb-8">
-        <h1 class="text-2xl font-bold text-blue-200">Submission Lookup</h1>
-        <p class="text-sm text-slate-600">Search submissions for a user</p>
+        <h1 class="text-2xl font-bold text-blue-200">Submission Search</h1>
+        <p class="text-sm text-slate-600">Lookup submissions for a user</p>
       </div>
 
       <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200 mb-8 flex gap-4">
