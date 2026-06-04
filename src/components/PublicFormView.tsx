@@ -214,165 +214,168 @@ export function PublicFormView(props: PublicFormViewProps) {
 
             <For each={props.form.fieldCollection}>
               {field => (
-                <form.Field
-                  //@ts-expect-error - generic fields are not directly supported
-                  name={field.machineSlug}
-                  validators={{
-                    onBlur: ({ value }) => validateField(field, value),
-                  }}
-                  children={(fieldApi) => {
-                    switch (field.fieldType) {
-                      case 'text':
-                        return (
-                          <div class={styles.field}>
-                            <div class="flex justify-between items-start">
+                <>
+                  <form.Field
+                    //@ts-expect-error - generic fields are not directly supported
+                    name={field.machineSlug}
+                    validators={{
+                      onBlur: ({ value }) => validateField(field, value),
+                    }}
+                    children={(fieldApi) => {
+                      switch (field.fieldType) {
+                        case 'text':
+                          return (
+                            <div class={styles.field}>
+                              <div class="flex justify-between items-start">
+                                <label for={field.machineSlug} class={styles.label}>
+                                  {field.displayLabel}
+                                  {field.metaSettings.required && <span class={styles.required}>*</span>}
+                                </label>
+                                <Show when={field.metaSettings.qrScanPopulate}>
+                                  <button
+                                    type="button"
+                                    onClick={() => openQrScanner(field.machineSlug)}
+                                    aria-label={`Scan QR code for ${field.displayLabel}`}
+                                    class={styles.qrButton}
+                                  >
+                                    Scan QR
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                      <rect x="3" y="3" width="7" height="7" />
+                                      <rect x="14" y="3" width="7" height="7" />
+                                      <rect x="3" y="14" width="7" height="7" />
+                                      <rect x="14" y="14" width="7" height="7" />
+                                    </svg>
+                                  </button>
+                                </Show>
+                              </div>
+                              <div class="flex gap-2">
+                                <input
+                                  id={field.machineSlug}
+                                  type="text"
+                                  value={fieldApi().state.value ?? ''}
+                                  onBlur={fieldApi().handleBlur}
+                                  onChange={(e) => fieldApi().handleChange(e.target.value)}
+                                  aria-invalid={fieldApi().state.meta.errors.length > 0}
+                                  aria-describedby={fieldApi().state.meta.errors.length ? `${field.machineSlug}-error` : undefined}
+                                  class={styles.input}
+                                  ref={fieldRefs[field.machineSlug]}
+                                />
+                              </div>
+                              <Show when={fieldApi().state.meta.errors.length > 0}>
+                                <p id={`${field.machineSlug}-error`} class={styles.error} role="alert">
+                                  {fieldApi().state.meta.errors[0]}
+                                </p>
+                              </Show>
+                            </div>
+                          )
+
+                        case 'numerical':
+                          return (
+                            <div class={styles.field}>
                               <label for={field.machineSlug} class={styles.label}>
                                 {field.displayLabel}
                                 {field.metaSettings.required && <span class={styles.required}>*</span>}
                               </label>
-                              <Show when={field.metaSettings.qrScanPopulate}>
-                                <button
-                                  type="button"
-                                  onClick={() => openQrScanner(field.machineSlug)}
-                                  aria-label={`Scan QR code for ${field.displayLabel}`}
-                                  class={styles.qrButton}
-                                >
-                                  Scan QR
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="3" y="3" width="7" height="7" />
-                                    <rect x="14" y="3" width="7" height="7" />
-                                    <rect x="3" y="14" width="7" height="7" />
-                                    <rect x="14" y="14" width="7" height="7" />
-                                  </svg>
-                                </button>
-                              </Show>
-                            </div>
-                            <div class="flex gap-2">
                               <input
                                 id={field.machineSlug}
-                                type="text"
+                                type="number"
                                 value={fieldApi().state.value ?? ''}
                                 onBlur={fieldApi().handleBlur}
                                 onChange={(e) => fieldApi().handleChange(e.target.value)}
                                 aria-invalid={fieldApi().state.meta.errors.length > 0}
                                 aria-describedby={fieldApi().state.meta.errors.length ? `${field.machineSlug}-error` : undefined}
                                 class={styles.input}
-                                ref={fieldRefs[field.machineSlug]}
                               />
+                              <Show when={fieldApi().state.meta.errors.length > 0}>
+                                <p id={`${field.machineSlug}-error`} class={styles.error} role="alert">
+                                  {fieldApi().state.meta.errors[0]}
+                                </p>
+                              </Show>
                             </div>
-                            <Show when={fieldApi().state.meta.errors.length > 0}>
-                              <p id={`${field.machineSlug}-error`} class={styles.error} role="alert">
-                                {fieldApi().state.meta.errors[0]}
-                              </p>
-                            </Show>
-                          </div>
-                        )
+                          )
 
-                      case 'numerical':
-                        return (
-                          <div class={styles.field}>
-                            <label for={field.machineSlug} class={styles.label}>
-                              {field.displayLabel}
-                              {field.metaSettings.required && <span class={styles.required}>*</span>}
-                            </label>
-                            <input
-                              id={field.machineSlug}
-                              type="number"
-                              value={fieldApi().state.value ?? ''}
-                              onBlur={fieldApi().handleBlur}
-                              onChange={(e) => fieldApi().handleChange(e.target.value)}
-                              aria-invalid={fieldApi().state.meta.errors.length > 0}
-                              aria-describedby={fieldApi().state.meta.errors.length ? `${field.machineSlug}-error` : undefined}
-                              class={styles.input}
-                            />
-                            <Show when={fieldApi().state.meta.errors.length > 0}>
-                              <p id={`${field.machineSlug}-error`} class={styles.error} role="alert">
-                                {fieldApi().state.meta.errors[0]}
-                              </p>
-                            </Show>
-                          </div>
-                        )
-
-                      case 'scale_1_10':
-                        return (
-                          <div class={styles.field}>
-                            <label class={styles.label}>
-                              {field.displayLabel}
-                              {field.metaSettings.required && <span class={styles.required}>*</span>}
-                            </label>
-                            <select
-                              value={fieldApi().state.value ?? ''}
-                              onBlur={fieldApi().handleBlur}
-                              onChange={(e) => fieldApi().handleChange(e.target.value)}
-                              aria-invalid={fieldApi().state.meta.errors.length > 0}
-                              aria-describedby={fieldApi().state.meta.errors.length ? `${field.machineSlug}-error` : undefined}
-                              class={styles.input}
-                            >
-                              <option value="">Select a value</option>
-                              <For each={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}>
-                                {num => <option value={num.toString()}>{num}</option>}
-                              </For>
-                            </select>
-                            <Show when={fieldApi().state.meta.errors.length > 0}>
-                              <p id={`${field.machineSlug}-error`} class={styles.error} role="alert">
-                                {fieldApi().state.meta.errors[0]}
-                              </p>
-                            </Show>
-                          </div>
-                        )
-
-                      case 'boolean':
-                        return (
-                          <div class={styles.booleanField}>
-                            <label for={field.machineSlug} class={styles.label}>
-                              {field.displayLabel}
-                              {field.metaSettings.required && <span class={styles.required}>*</span>}
-                            </label>
-                            <p>No</p>
-                            <input
-                              id={field.machineSlug}
-                              type="checkbox"
-                              /* Updated checked logic below */
-                              checked={fieldApi().state.value === 'true'}
-                              onChange={(e) => fieldApi().handleChange(e.target.checked ? 'true' : 'false')}
-                              class={styles.checkbox}
-                            />
-                            <p>Yes</p>
-                          </div>
-                        )
-
-                      case 'likert':
-                        return (
-                          <div class={styles.field}>
-                            <span class={styles.label}>
-                              {field.displayLabel}
-                              {field.metaSettings.required && <span class={styles.required}>*</span>}
-                            </span>
-                            <div class={styles.likertOptions}>
-                              <For each={['Strongly Disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly Agree']}>
-                                {(option, index) => (
-                                  <label class={styles.likertLabel}>
-                                    <input
-                                      type="radio"
-                                      name={field.machineSlug}
-                                      value={index() + 1}
-                                      checked={parseInt(fieldApi().state.value) == index() + 1}
-                                      onChange={() => fieldApi().handleChange((index() + 1).toString())}
-                                      class={styles.radio}
-                                    />
-                                    {option}
-                                  </label>
-                                )}
-                              </For>
+                        case 'scale_1_10':
+                          return (
+                            <div class={styles.field}>
+                              <label class={styles.label}>
+                                {field.displayLabel}
+                                {field.metaSettings.required && <span class={styles.required}>*</span>}
+                              </label>
+                              <select
+                                value={fieldApi().state.value ?? ''}
+                                onBlur={fieldApi().handleBlur}
+                                onChange={(e) => fieldApi().handleChange(e.target.value)}
+                                aria-invalid={fieldApi().state.meta.errors.length > 0}
+                                aria-describedby={fieldApi().state.meta.errors.length ? `${field.machineSlug}-error` : undefined}
+                                class={styles.input}
+                              >
+                                <option value="">Select a value</option>
+                                <For each={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}>
+                                  {num => <option value={num.toString()}>{num}</option>}
+                                </For>
+                              </select>
+                              <Show when={fieldApi().state.meta.errors.length > 0}>
+                                <p id={`${field.machineSlug}-error`} class={styles.error} role="alert">
+                                  {fieldApi().state.meta.errors[0]}
+                                </p>
+                              </Show>
                             </div>
-                          </div>
-                        )
+                          )
 
-                      default:
-                        return null
-                    }
-                  }}
-                />
+                        case 'boolean':
+                          return (
+                            <div class={styles.booleanField}>
+                              <label for={field.machineSlug} class={styles.label}>
+                                {field.displayLabel}
+                                {field.metaSettings.required && <span class={styles.required}>*</span>}
+                              </label>
+                              <p>No</p>
+                              <input
+                                id={field.machineSlug}
+                                type="checkbox"
+                                /* Updated checked logic below */
+                                checked={fieldApi().state.value === 'true'}
+                                onChange={(e) => fieldApi().handleChange(e.target.checked ? 'true' : 'false')}
+                                class={styles.checkbox}
+                              />
+                              <p>Yes</p>
+                            </div>
+                          )
+
+                        case 'likert':
+                          return (
+                            <div class={styles.field}>
+                              <span class={styles.label}>
+                                {field.displayLabel}
+                                {field.metaSettings.required && <span class={styles.required}>*</span>}
+                              </span>
+                              <div class={styles.likertOptions}>
+                                <For each={['Strongly Disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly Agree']}>
+                                  {(option, index) => (
+                                    <label class={styles.likertLabel}>
+                                      <input
+                                        type="radio"
+                                        name={field.machineSlug}
+                                        value={index() + 1}
+                                        checked={parseInt(fieldApi().state.value) == index() + 1}
+                                        onChange={() => fieldApi().handleChange((index() + 1).toString())}
+                                        class={styles.radio}
+                                      />
+                                      {option}
+                                    </label>
+                                  )}
+                                </For>
+                              </div>
+                            </div>
+                          )
+
+                        default:
+                          return null
+                      }
+                    }}
+                  />
+                  <hr />
+                </>
               )}
             </For>
 
