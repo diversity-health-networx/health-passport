@@ -40,16 +40,26 @@ export function AdminAnalyticsDashboard(props: AdminAnalyticsDashboardProps) {
     if (!records || records.length === 0) return alert('Dataset empty.')
 
     const parsedFields = props.form.questions_json ? JSON.parse(props.form.questions_json) : props.form.fieldCollection
-    const headers = ['Submission UUIDv7', 'User ID', 'Decoded Timestamp', ...(parsedFields as any[]).map((f: any) => f.machineSlug)]
+    
+    // 1. Map the header values strictly to the question text (displayLabel).
+    // We wrap each header item in quotes and escape internal quotes to prevent commas in questions from breaking layout.
+    const headers = [
+      'Submission UUIDv7', 
+      'User ID', 
+      'Timestamp', 
+      ...(parsedFields as any[]).map((f: any) => `"${(f.displayLabel || 'Untitled Question').replace(/"/g, '""')}"`)
+    ]
 
     const rowMatrix = [headers.join(',')]
     for (const record of records) {
       const responses = JSON.parse(record.answers_json || '{}')
       const timeString = new Date(extractTimestampFromUUIDv7(record.id) * 1000).toISOString()
+      
       const matchingRow = [
         `"${record.id}"`,
         `"${record.user_id}"`,
         `"${timeString}"`,
+        // 2. Look up data utilizing the unique machineSlug, even though the slug itself is excluded from headers
         ...(parsedFields as any[]).map((f: any) => `"${String(responses[f.machineSlug] ?? '').replace(/"/g, '""')}"`),
       ]
       rowMatrix.push(matchingRow.join(','))
@@ -63,7 +73,7 @@ export function AdminAnalyticsDashboard(props: AdminAnalyticsDashboardProps) {
     document.body.appendChild(hiddenLink)
     hiddenLink.click()
     document.body.removeChild(hiddenLink)
-  }
+}
 
   const emailCSV = async () => {
     const targetEmail = window.prompt('Enter email');

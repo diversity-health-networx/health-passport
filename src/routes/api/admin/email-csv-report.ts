@@ -30,10 +30,10 @@ export const Route = createFileRoute('/api/admin/email-csv-report')({
 
                 const parsedFields = JSON.parse(formRecord.questions_json || '[]')
                 const headers = [
-                    'Submission ID',
+                    'Submission UUIDv7',
                     'User ID',
-                    'Submitted At',
-                    ...parsedFields.map((f: any) => f.machineSlug),
+                    'Decoded Timestamp',
+                    ...parsedFields.map((f: any) => `"${(f.displayLabel || 'Untitled Question').replace(/"/g, '""')}"`),
                 ]
 
                 // 2. Fetch all submissions matching the form_id
@@ -57,6 +57,8 @@ export const Route = createFileRoute('/api/admin/email-csv-report')({
                         `"${record.id}"`,
                         `"${record.user_id}"`,
                         `"${timeString}"`,
+                        // 4. We strictly use the unique machineSlug to pull the correct answer from the JSON, 
+                        // but the slug itself is never printed in the CSV output.
                         ...parsedFields.map(
                             (f: any) => `"${String(responses[f.machineSlug] ?? '').replace(/"/g, '""')}"`
                         ),
