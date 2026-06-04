@@ -1,12 +1,9 @@
 import { createSignal, For, Show, createMemo } from 'solid-js'
 import { createForm } from '@tanstack/solid-form'
 import type { DynamicFormSchema } from '~/types/form'
-import { ErrorModal } from './ErrorModal'
 import { ConfirmationModal } from './ConfirmationModal'
 import { QRScannerModal } from './QRScannerModal'
 import styles from './Form.module.css'
-
-
 
 interface PublicFormViewProps {
   form: DynamicFormSchema
@@ -20,6 +17,8 @@ export function PublicFormView(props: PublicFormViewProps) {
   const [cachedSubmission, setCachedSubmission] = createSignal<any>(null)
   const [qrScannerOpen, setQrScannerOpen] = createSignal(false)
   const [qrScannerField, setQrScannerField] = createSignal<string | null>(null)
+
+  const fieldRefs: Record<string, HTMLInputElement> = {}
 
   // Check if form has expired
   const formExpired = () => {
@@ -156,9 +155,12 @@ export function PublicFormView(props: PublicFormViewProps) {
 
   const handleQrScan = (result: string) => {
     const fieldKey = qrScannerField();
-
-    //@ts-expect-error - generic fields are not directly supported
-    fieldKey && form.setFieldValue(fieldKey!, result)
+    if (fieldKey) {
+      //@ts-expect-error - generic fields are not directly supported
+      fieldKey && form.setFieldValue(fieldKey!, result)
+      const el = fieldRefs[fieldKey];
+      el.value = result;
+    }
   }
 
   return (
@@ -205,6 +207,7 @@ export function PublicFormView(props: PublicFormViewProps) {
                 aria-describedby={form.state.fieldMeta.userId?.errors?.length ? 'userId-error' : undefined}
                 required
                 class={styles.input}
+                ref={fieldRefs.userId}
               />
             </div>
 
@@ -252,6 +255,7 @@ export function PublicFormView(props: PublicFormViewProps) {
                                 aria-invalid={fieldApi().state.meta.errors.length > 0}
                                 aria-describedby={fieldApi().state.meta.errors.length ? `${field.machineSlug}-error` : undefined}
                                 class={styles.input}
+                                ref={fieldRefs[field.machineSlug]}
                               />
                             </div>
                             <Show when={fieldApi().state.meta.errors.length > 0}>
