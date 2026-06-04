@@ -65,11 +65,12 @@ export function AdminAnalyticsDashboard(props: AdminAnalyticsDashboardProps) {
     document.body.removeChild(hiddenLink)
   }
 
-  const dispatchCSVViaPostmark = async () => {
+  const emailCSV = async () => {
+    const targetEmail = window.prompt('Enter email');
     const targetCall = await fetch('/api/admin/email-csv-report', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ formId: props.form.id }),
+      body: JSON.stringify({ formId: props.form.id, targetEmail }),
     })
     if (targetCall.ok) alert('Data report exported to primary administrative inbox.')
   }
@@ -106,7 +107,7 @@ export function AdminAnalyticsDashboard(props: AdminAnalyticsDashboardProps) {
           <button onClick={compileAndDownloadCSV} class={`${styles.btn} ${styles.btnDark}`}>
             Download
           </button>
-          <button onClick={dispatchCSVViaPostmark} class={`${styles.btn} ${styles.btnPrimary}`}>
+          <button onClick={emailCSV} class={`${styles.btn} ${styles.btnPrimary}`}>
             Email
           </button>
         </div>
@@ -187,10 +188,10 @@ export function AdminAnalyticsDashboard(props: AdminAnalyticsDashboardProps) {
 
         <div class={styles.inspectionPanel}>
           <h3 class={styles.panelTitle}>Inspection Panel</h3>
-          <Show when={selectedSubmission()} fallback={<p class={styles.panelPlaceholder}>Select a entry row item to explore granular response parameters.</p>}>
+          <Show when={selectedSubmission()} fallback={<p class={styles.panelPlaceholder}>Select a submission to view answers.</p>}>
             <div class={styles.response}>
               <div>
-                <span class={styles.fieldLabel}>Submission Unique ID (UUIDv7)</span>
+                <span class={styles.fieldLabel}>Submission ID</span>
                 <span class={styles.monoBox}>{selectedSubmission().id}</span>
               </div>
               <div>
@@ -220,7 +221,7 @@ export function AdminAnalyticsDashboard(props: AdminAnalyticsDashboardProps) {
               </div>
               <div>
                 <div class={styles.mappingHeader} onClick={() => setIsMappingExpanded(!isMappingExpanded())}>
-                  <span class={styles.fieldLabel}>Field Response Parameters Mapping</span>
+                  <span class={styles.fieldLabel}>Raw Response Data</span>
                   <span class={`${styles.caret} ${isMappingExpanded() ? styles.caretUp : styles.caretDown}`} aria-hidden="true">
                     ▼
                   </span>
