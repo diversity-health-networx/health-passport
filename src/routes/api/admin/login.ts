@@ -35,7 +35,7 @@ export const Route = createFileRoute('/api/admin/login')({
           }
 
           // Token is valid. We generate a fresh token to act as the session cookie.
-          const sessionToken = await sealAdminAuthToken(validEmail, appSecret)
+          const sessionToken = await sealAdminAuthToken(validEmail, appSecret, '24hr')
 
           // Use the cookie library to securely serialize the cookie options
           const cookieHeader = serialize('auth', sessionToken, {

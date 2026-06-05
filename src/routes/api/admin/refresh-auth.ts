@@ -34,7 +34,7 @@ export const Route = createFileRoute('/api/admin/refresh-auth')({
 
         // If valid, issue a fresh session cookie
         if (user) {
-          const freshToken = await sealAdminAuthToken(user, appSecret)
+          const freshToken = await sealAdminAuthToken(user, appSecret, '24hr')
           headers.append(
             'Set-Cookie',
             serialize('auth', freshToken, {
