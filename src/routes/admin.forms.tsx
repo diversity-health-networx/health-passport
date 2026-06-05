@@ -42,10 +42,11 @@ function AdminFormsDashboard() {
         <table class={styles.table}>
           <thead class={styles.tableHeader}>
             <tr>
-              <th class={styles.th}>Form Registry Name</th>
-              <th class={styles.th}>Unique Identity ID (UUIDv7)</th>
-              <th class={styles.th}>Required ID Variant Format</th>
-              <th class={styles.th}>Actions</th>
+              <th class={styles.th}>Form Name</th>
+              <th class={styles.th}>Form ID</th>
+              <th class={styles.th}>Link</th>
+              <th class={styles.th}>Dashboard</th>
+              <th class={styles.th}>Action</th>
             </tr>
           </thead>
           <tbody class={styles.tbody}>
@@ -56,17 +57,19 @@ function AdminFormsDashboard() {
                     <td class={styles.td}>{form.name}</td>
                     <td class={styles.td}>{form.id}</td>
                     <td class={styles.td}>
-                      <span class={styles.chip}>{form.user_id_format}</span>
+                      <Link to='/form/$formId' params={{ formId: form.id }} search={{ view: undefined }} class={styles.actionLink}>
+                        Open
+                      </Link>
                     </td>
                     <td class={styles.td}>
-                      <div class={styles.actions}>
-                        <Link to='/form/$formId' params={{formId: form.id}} search={{view: 'admin'}} class={styles.actionLink}>
-                          Dashboard
-                        </Link>
-                        <button onClick={() => executeFormDeletion(form.id)} class={styles.deleteAction}>
-                          Delete
-                        </button>
-                      </div>
+                      <Link to='/form/$formId' params={{ formId: form.id }} search={{ view: 'admin' }} class={styles.actionLink}>
+                        Manage
+                      </Link>
+                    </td>
+                    <td class={styles.td}>
+                      <button onClick={() => executeFormDeletion(form.id)} class={styles.deleteAction}>
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 )}
