@@ -9,7 +9,7 @@
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 1rem;
-  box-shadow: 
+  box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.05),
     0 10px 25px -5px rgba(0, 0, 0, 0.04),
     0 8px 10px -6px rgba(0, 0, 0, 0.02);
@@ -18,7 +18,7 @@
 }
 
 .card:hover {
-  box-shadow: 
+  box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.08),
     0 20px 25px -5px rgba(0, 0, 0, 0.06),
     0 10px 10px -5px rgba(0, 0, 0, 0.03);
@@ -89,21 +89,70 @@
   align-items: center;
   gap: 0.5rem;
 }
+
 .booleanField .label {
   margin-right: 2rem;
 }
 
 .likertOptions {
-  display: flex;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  text-align: center;
+  margin-top: 0.5rem;
 }
 
 .likertLabel {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.35rem;
   font-size: 0.75rem;
+  cursor: pointer;
 }
+
+.likertOptions {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.likertLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.radio {
+  width: min(1rem, 3vw);
+  width: min(1rem, 3lvw);
+  height: min(1rem, 3vw);
+  height: min(1rem, 3lvw);
+}
+
+/* --- Mobile adjustments --- */
+@media (max-width: 600px) {
+
+  .likertLabel {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 400px) {
+
+  .likertLabel {
+    font-size: 0.65rem;
+  }
+
+  .radio {
+    width: 0.4rem;
+    height: 0.4rem;
+  }
+}
+
 
 .radio {
   width: 2rem;
@@ -118,8 +167,10 @@
   -webkit-appearance: none;
   width: 3.25rem;
   height: 1.75rem;
-  background: #8b0000; /* Dark red background (Off state) */
-  border-radius: 2rem; /* Pill shape */
+  background: #8b0000;
+  /* Dark red background (Off state) */
+  border-radius: 2rem;
+  /* Pill shape */
   position: relative;
   cursor: pointer;
   outline: none;
@@ -136,8 +187,10 @@
   left: 0.23rem;
   width: 1.3rem;
   height: 1.3rem;
-  background: #ffb950; /* Light orange handle (Off state) */
-  border: 1px solid #e65100; /* Deeper orange border (Off state) */
+  background: #ffb950;
+  /* Light orange handle (Off state) */
+  border: 1px solid #e65100;
+  /* Deeper orange border (Off state) */
   border-radius: 50%;
   transition: transform 300ms ease, background 300ms ease, border-color 300ms ease;
   box-sizing: border-box;
@@ -151,14 +204,18 @@
 
 /* Checked (On) State */
 .checkbox:checked {
-  background: #1b5e20; /* Blue background (On state) */
+  background: #1b5e20;
+  /* Blue background (On state) */
 }
 
 /* Checked (On) State Handle */
 .checkbox:checked::after {
-  transform: translateX(1.5rem); /* Slide handle to the right */
-  background: #0472da; /* Light green handle (On state) */
-  border-color: #5bffc8; /* Darker green border (On state) */
+  transform: translateX(1.5rem);
+  /* Slide handle to the right */
+  background: #0472da;
+  /* Light green handle (On state) */
+  border-color: #5bffc8;
+  /* Darker green border (On state) */
 }
 
 .checkbox:hover {
@@ -255,11 +312,40 @@
   animation: fadeInScale 300ms ease-out;
 }
 
+@media (max-width: 768px) {
+  .container {
+    max-width: 100%;
+    padding: 1rem;
+    /* optional: tighter padding for small screens */
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  .checkbox {
+    width: 3.75rem;   /* slightly wider so the handle has room */
+    height: 2rem;     /* slightly taller for touch targets */
+  }
+
+  .checkbox::after {
+    width: 1.45rem;
+    height: 1.45rem;
+    top: 0.25rem;
+    left: 0.25rem;
+  }
+
+  .checkbox:checked::after {
+    transform: translateX(1.75rem); /* adjusted for new width */
+  }
+}
+
 @keyframes fadeInScale {
   0% {
     opacity: 0;
     transform: translateY(-10px) scale(0.98);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -271,9 +357,11 @@
     opacity: 0;
     transform: translateX(-4px);
   }
+
   50% {
     transform: translateX(2px);
   }
+
   100% {
     opacity: 1;
     transform: translateX(0);
