@@ -117,7 +117,7 @@ function FormSchemaBuilderWorkspace() {
       </div>
 
       <div class="border-t border-slate-200 pt-4 mb-6">
-        <h2 class="text-sm font-semibold text-slate-900 mb-3">Form Fields</h2>
+        <h2 class="text-sm font-semibold text-slate-900 mb-3">Add Questions</h2>
 
         <div class="flex flex-wrap gap-2 mb-4">
           <For each={['text', 'numerical', 'scale_1_10', 'boolean', 'likert']}>
@@ -127,7 +127,7 @@ function FormSchemaBuilderWorkspace() {
                 onClick={() => injectQuestionTrack(type as QuestionType)}
                 class="px-3 py-1.5 text-xs font-medium bg-slate-100 text-slate-700 rounded hover:bg-slate-200 hover:cursor-pointer"
               >
-                Add {type.replace('_', ' ')}
+                {type.replace('_', ' ')}
               </button>
             )}
           </For>
