@@ -201,11 +201,11 @@ export function AdminAnalyticsDashboard(props: AdminAnalyticsDashboardProps) {
                       const label = field?.displayLabel || slug
                       return (
                         <div class="space-y-1">
-                          <label class="block text-sm font-medium text-slate-700">
+                          <label class="block text-sm font-medium text-slate-700 overflow-auto">
                             {label}
                           </label>
                           <div class="w-full border border-slate-300 rounded px-3 py-2 text-sm bg-slate-50 text-slate-900 min-h-[38px] flex items-center">
-                            {value !== undefined && value !== '' ? String(value) : <span class="text-slate-400 italic">No response</span>}
+                            {value !== undefined && value !== '' ? <span class="min-w-0 break-words whitespace-pre-wrap">{String(value)}</span> : <span class="text-slate-400 italic min-w-0 break-words whitespace-pre-wrap">No response</span>}
                           </div>
                         </div>
                       )

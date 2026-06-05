@@ -91,11 +91,11 @@ function SubmissionPage() {
                       const label = field?.displayLabel || slug
                       return (
                         <div class="space-y-1.5">
-                          <label class="block text-sm font-medium text-slate-700 break-words">
+                          <label class="block text-sm font-medium text-slate-700 break-words overflow-auto">
                             {label}
                           </label>
-                          <div class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm bg-slate-50 text-slate-900 min-h-[42px] flex items-center break-words whitespace-pre-wrap leading-relaxed">
-                            {value !== undefined && value !== '' ? String(value) : <span class="text-slate-400 italic">No response</span>}
+                          <div class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm bg-slate-50 text-slate-900 min-h-[42px] flex items-center break-words whitespace-pre-wrap leading-relaxed overflow-auto">
+                            {value !== undefined && value !== '' ? <span class="min-w-0 break-words whitespace-pre-wrap">{String(value)}</span> : <span class="text-slate-400 italic min-w-0 break-words whitespace-pre-wrap">No response</span>}
                           </div>
                         </div>
                       )
