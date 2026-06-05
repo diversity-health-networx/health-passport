@@ -41,7 +41,7 @@ export const Route = createFileRoute('/api/admin/refresh-auth')({
               httpOnly: true,
               secure: true,
               path: '/',
-              maxAge: 900,
+              maxAge: 604800, // 1 week (in seconds)
               sameSite: 'strict',
             })
           )
