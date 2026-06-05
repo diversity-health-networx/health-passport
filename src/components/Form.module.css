@@ -183,18 +183,23 @@
 .checkbox {
   appearance: none;
   -webkit-appearance: none;
+  
+  /* --- iOS SAFARI FIXES --- */
+  display: inline-block; 
+  flex-shrink: 0; 
+  min-width: 3.25rem; 
+  /* ------------------------ */
+
   width: 3.25rem;
   height: 1.75rem;
-  background: #8b0000;
-  /* Dark red background (Off state) */
-  border-radius: 2rem;
-  /* Pill shape */
+  background: #8b0000; /* Dark red background (Off state) */
+  border-radius: 2rem; /* Pill shape */
   position: relative;
   cursor: pointer;
   outline: none;
+  border: none; /* Good practice to clear default iOS borders */
   transition: background 300ms ease;
   margin: 0 .25rem;
-  -webkit-margin-collapse: collapse;
 }
 
 /* Toggle Switch Handle */
