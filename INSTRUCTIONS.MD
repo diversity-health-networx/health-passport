@@ -4,16 +4,17 @@
 Migrate all features from `../health-passport(old)` to the working `health-passport` app while maintaining the Cloudflare deployment configuration already in place.
 
 ## Current Working App Status
-- ❌ Make authentication refresh tokens more persistent with browser cookies when available to reduce postmark api usage
 - ❌ Add optional submission start time for forms
 - ❌ Strict enforcement of at least one required question is needed so that empty form responses can't be submitted
 - ❌ Error message missing to display cause of form creation failure
 - ❌ Allow non-admins to see list of active forms
 - ❌ Allow searching for forms by name (admins can search all forms, users can search for forms filtered for current time prior to submissions_expiry)
 - ❌ Allow question order to be changed on form page with up and down arrows that can be clicked on the right side of the question's div
+- ⚠️ Use alternating colors on tables with slightly different colors for the header row for readability
 - ⚠️ Add google sheets connection admins can set so that each form entry is appended to a sheet with an optional tab name to be set
 - ⚠️ Allow duplicating forms where the user enters a new name and a new form id is generated on the backend (requires adding new API route)
 - ⚠️ Allow enabling eventbrite verification where a user id is checked for existence as a ticket id for an eventbrite event (requires adding column for eventbrite api key and event id to forms table. event brite api key and event id can be updated in each form's admin dashboard, ticket qr codes contain an extended version of the ticket id and may need to be truncated to be checked with the api)
+- ✅ Make authentication refresh tokens more persistent with browser cookies when available to reduce postmark api usage
 - ✅ TanStack Start Solid configured with @tanstack/solid-start
 - ✅ Vite build outputting to `dist/client` and `dist/server`
 - ✅ wrangler.jsonc configured for Pages deployment with nodejs_compat
