@@ -5,14 +5,34 @@ const PERMITTED_DOMAIN = '@dhnrx.com'
 export function checkDomainClearance(email: string): boolean {
   return email.toLowerCase().endsWith(PERMITTED_DOMAIN)
 }
-
-export async function sealAdminAuthToken(email: string, appSecret: string): Promise<string> {
+/**
+ * Creates and signs an admin authentication token using `jose`'s `SignJWT`.
+ *
+ * The token includes:
+ * - `context: "admin"` in the payload
+ * - `HS256` protected header
+ * - the user's email as the JWT subject
+ * - issued‑at timestamp
+ * - an expiration time (defaults to 15 minutes)
+ *
+ * @param email The admin user's email. Stored as the JWT subject in lowercase.
+ * @param appSecret The application secret used to sign the token (HS256).
+ * @param duration Optional expiration value passed directly to
+ * `SignJWT.setExpirationTime`.  
+ * Supports the same formats as jose (e.g., `"15m"`, `"2h"`, numeric seconds, or a `Date`).
+ *
+ * @returns A signed JWT string.
+ *
+ * @see SignJWT#setExpirationTime
+ * @see https://github.com/panva/jose/blob/main/docs/classes/jwt_sign.SignJWT.md#setexpirationtime
+ */
+export async function sealAdminAuthToken(email: string, appSecret: string, duration?: string | number | Date): Promise<string> {
   const secretBuffer = new TextEncoder().encode(appSecret)
   return await new SignJWT({ context: 'admin' })
     .setProtectedHeader({ alg: 'HS256' })
     .setSubject(email.toLowerCase())
     .setIssuedAt()
-    .setExpirationTime('15m')
+    .setExpirationTime(duration || '15m')
     .sign(secretBuffer)
 }
 
