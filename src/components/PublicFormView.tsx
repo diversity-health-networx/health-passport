@@ -18,7 +18,7 @@ export function PublicFormView(props: PublicFormViewProps) {
   const [qrScannerOpen, setQrScannerOpen] = createSignal(false)
   const [qrScannerField, setQrScannerField] = createSignal<string | null>(null)
 
-  const fieldRefs: Record<string, HTMLInputElement> = {}
+  const fieldRefs: Record<string, HTMLInputElement | HTMLTextAreaElement> = {}
 
   // Check if form has expired
   const formExpired = () => {
@@ -208,7 +208,7 @@ export function PublicFormView(props: PublicFormViewProps) {
                 aria-describedby={form.state.fieldMeta.userId?.errors?.length ? 'userId-error' : undefined}
                 required
                 class={styles.input}
-                ref={fieldRefs.userId}
+                ref={fieldRefs.userId as HTMLInputElement}
               />
             </div>
 
@@ -249,16 +249,15 @@ export function PublicFormView(props: PublicFormViewProps) {
                                 </Show>
                               </div>
                               <div class="flex gap-2">
-                                <input
+                                <textarea
                                   id={field.machineSlug}
-                                  type="text"
                                   value={fieldApi().state.value ?? ''}
                                   onBlur={fieldApi().handleBlur}
                                   onChange={(e) => fieldApi().handleChange(e.target.value)}
                                   aria-invalid={fieldApi().state.meta.errors.length > 0}
                                   aria-describedby={fieldApi().state.meta.errors.length ? `${field.machineSlug}-error` : undefined}
-                                  class={styles.input}
-                                  ref={fieldRefs[field.machineSlug]}
+                                  class={styles.textArea}
+                                  ref={fieldRefs[field.machineSlug] as HTMLTextAreaElement}
                                 />
                               </div>
                               <Show when={fieldApi().state.meta.errors.length > 0}>

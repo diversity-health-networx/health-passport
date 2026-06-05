@@ -63,7 +63,8 @@
   color: #dc2626;
 }
 
-.input {
+.input,
+.textArea {
   width: 100%;
   padding: 0.75rem 1rem;
   border: 2px solid #8f9296;
@@ -73,16 +74,33 @@
   background: #ffffff;
 }
 
-.input:focus {
+.input:focus,
+.textArea:focus {
   outline: none;
   border-color: #6366f1;
   box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
   background: #ffffff;
 }
 
-.input:hover:not(:focus) {
+.input:hover:not(:focus),
+.textArea:hover:not(:focus) {
   border-color: #686868;
 }
+
+.textArea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #8f9296;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.4;        /* controls vertical rhythm */
+  min-height: calc(1.4em * 4 + 1.5rem); 
+  /* 4 lines + padding (top+bottom = ~1.5rem) */
+  transition: all 200ms ease;
+  background: #ffffff;
+  resize: vertical;        /* optional: allow user resizing */
+}
+
 
 .booleanField {
   display: flex;
