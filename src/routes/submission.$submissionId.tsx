@@ -69,7 +69,7 @@ function SubmissionPage() {
                     <span class="break-all">{submissionQuery.data?.id}</span>
                   </p>
                   <p class="text-xs sm:text-sm text-slate-500 font-mono break-all flex flex-wrap gap-x-1">
-                    <span class="font-semibold text-slate-700">User ID:</span> 
+                    <span class="font-semibold text-slate-700">Ticket ID:</span> 
                     <span class="break-all">{submissionQuery.data?.userId}</span>
                   </p>
                   <p class="text-xs sm:text-sm text-slate-500 font-mono flex flex-wrap gap-x-1">

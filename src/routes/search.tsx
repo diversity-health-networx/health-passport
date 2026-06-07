@@ -97,14 +97,14 @@ function UserSubmissionCrossLookup() {
               type="text"
               value={searchQuery()}
               onInput={(e) => setSearchQuery(e.currentTarget.value)}
-              placeholder="Enter User ID..."
+              placeholder="Enter Ticket / Attendee ID..."
               class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
           <button
             type="button"
             onClick={openQrScanner}
-            aria-label="Scan QR code for User ID"
+            aria-label="Scan QR code for Ticket / Attendee ID"
             class="p-2 border-1 bg-indigo-950 text-[#3c434d] cursor-pointer rounded flex items-center justify-center transition-all duration-150 ease-out hover:bg-slate-800 hover:text-indigo-600 hover:scale-105 focus:outline focus:outline-2 focus:outline-indigo-600 focus:outline-offset-2 focus:bg-slate-100 focus:text-indigo-600 active:scale-95"
           >
             <span class="mx-2 text-white">Scan</span>

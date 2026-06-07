@@ -181,12 +181,12 @@ export function PublicFormView(props: PublicFormViewProps) {
             <div class={styles.field}>
               <div class="flex justify-between items-start">
                 <label for="userId" class={styles.label}>
-                  User ID <span class={styles.required}>*</span>
+                  Ticket / Attendee ID (non-personal identitfier) <span class={styles.required}>*</span>
                 </label>
                 <button
                   type="button"
                   onClick={() => openQrScanner('userId')}
-                  aria-label="Scan QR code for User ID"
+                  aria-label="Scan QR code for Ticket ID"
                   class={styles.qrButton}
                 >
                   Scan QR
@@ -201,7 +201,7 @@ export function PublicFormView(props: PublicFormViewProps) {
               <input
                 id="userId"
                 type="text"
-                placeholder="Enter your user ID"
+                placeholder="Enter your ticket ID"
                 value={form.state.values.userId ?? ''}
                 onInput={(e) => form.setFieldValue('userId', e.target.value)}
                 aria-invalid={(form.state.fieldMeta.userId?.errors?.length || 0) > 0}
